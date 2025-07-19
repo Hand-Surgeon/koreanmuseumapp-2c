@@ -12,9 +12,15 @@ import Image from "next/image"
 import { artifacts } from "@/data/artifacts"
 import { useLanguage } from "@/hooks/useLanguage"
 
-export default function HallPage({ params }: { params: { name: string } }) {
+export default async function HallPage({ params }: { params: Promise<{ name: string }> }) {
+  const resolvedParams = await params
+  
+  return <HallPageClient name={resolvedParams.name} />
+}
+
+function HallPageClient({ name }: { name: string }) {
   const { t, language } = useLanguage()
-  const hallName = decodeURIComponent(params.name)
+  const hallName = decodeURIComponent(name)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState(t.all)
   const [showFilters, setShowFilters] = useState(false)

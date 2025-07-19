@@ -11,13 +11,19 @@ import { useState } from "react"
 import { artifacts } from "@/data/artifacts"
 import { useLanguage } from "@/hooks/useLanguage"
 
-export default function ArtifactDetail({ params }: { params: { id: string } }) {
+export default async function ArtifactDetail({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params
+  
+  return <ArtifactDetailClient id={resolvedParams.id} />
+}
+
+function ArtifactDetailClient({ id }: { id: string }) {
   const { t, language } = useLanguage()
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [isLiked, setIsLiked] = useState(false)
   const [isImageExpanded, setIsImageExpanded] = useState(false)
 
-  const artifact = artifacts.find((a) => a.id === Number.parseInt(params.id))
+  const artifact = artifacts.find((a) => a.id === Number.parseInt(id))
 
   if (!artifact) {
     return (
