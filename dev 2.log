@@ -1,0 +1,73 @@
+
+> my-v0-project@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.2.4
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.0.73:3000
+
+ ✓ Starting...
+ ✓ Ready in 1240ms
+ ○ Compiling / ...
+ ⨯ ./hooks/useLanguage.ts
+Error:   [31mx[0m Expected '>', got 'value'
+    ,-[[36;1;4m/Users/youngseoklee/Desktop/koreanmuseumapp-2c-main/hooks/useLanguage.ts[0m:42:1]
+ [2m39[0m | 
+ [2m40[0m |   const t = translations[language]
+ [2m41[0m | 
+ [2m42[0m |   return <LanguageContext.Provider value={{ language, setLanguage, t }}>{children}</LanguageContext.Provider>
+    : [35;1m                                   ^^^^^[0m
+ [2m43[0m | }
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./hooks/useLanguage.ts
+./app/page.tsx
+ ⨯ ./hooks/useLanguage.ts
+Error:   [31mx[0m Expected '>', got 'value'
+    ,-[[36;1;4m/Users/youngseoklee/Desktop/koreanmuseumapp-2c-main/hooks/useLanguage.ts[0m:42:1]
+ [2m39[0m | 
+ [2m40[0m |   const t = translations[language]
+ [2m41[0m | 
+ [2m42[0m |   return <LanguageContext.Provider value={{ language, setLanguage, t }}>{children}</LanguageContext.Provider>
+    : [35;1m                                   ^^^^^[0m
+ [2m43[0m | }
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./hooks/useLanguage.ts
+./app/page.tsx
+ ⨯ ./hooks/useLanguage.ts
+Error:   [31mx[0m Expected '>', got 'value'
+    ,-[[36;1;4m/Users/youngseoklee/Desktop/koreanmuseumapp-2c-main/hooks/useLanguage.ts[0m:42:1]
+ [2m39[0m | 
+ [2m40[0m |   const t = translations[language]
+ [2m41[0m | 
+ [2m42[0m |   return <LanguageContext.Provider value={{ language, setLanguage, t }}>{children}</LanguageContext.Provider>
+    : [35;1m                                   ^^^^^[0m
+ [2m43[0m | }
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./hooks/useLanguage.ts
+./app/page.tsx
+ GET / 500 in 4605ms
+ ⨯ ./hooks/useLanguage.ts
+Error: Failed to read source code from /Users/youngseoklee/Desktop/koreanmuseumapp-2c-main/hooks/useLanguage.ts
+
+Caused by:
+    No such file or directory (os error 2)
+
+Import trace for requested module:
+./hooks/useLanguage.ts
+./app/page.tsx
+[?25h
