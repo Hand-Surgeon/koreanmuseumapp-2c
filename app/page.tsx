@@ -33,7 +33,7 @@ export default function HomePage() {
       translatedName: t[config.translatedName],
       description: t[`${config.translatedName.replace('Hall', 'Desc')}` as keyof Translation],
       icon: config.icon,
-      color: `bg-gradient-to-br from-${config.color.split(' ')[0].replace('bg-', '')} to-${config.color.split(' ')[0].replace('bg-', '').replace('50', '100')} ${config.color.split(' ')[1]}`,
+      color: config.color,
       textColor: config.textColor,
       stats,
       featured,
