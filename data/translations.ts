@@ -421,7 +421,6 @@ export const translations: Record<string, Translation> = {
     artifactNumber: "หมายเลขโบราณวัตถุ",
     culturalPropertyDesignation: "การกำหนดทรัพย์สินทางวัฒนธรรม",
   },
-<<<<<<< HEAD
   vi: {
     // Chung
     nationalMuseum: "Bảo tàng Quốc gia Hàn Quốc",
@@ -842,8 +841,6 @@ export const translations: Record<string, Translation> = {
     artifactNumber: "رقم القطعة الأثرية",
     culturalPropertyDesignation: "تعيين الممتلكات الثقافية",
   },
-=======
->>>>>>> 48212043e6dd306e986b9e876f73f7434b4c8a76
 }
 
 export const languageNames: Record<string, string> = {
@@ -852,14 +849,11 @@ export const languageNames: Record<string, string> = {
   zh: "中文",
   ja: "日本語",
   th: "ไทย",
-<<<<<<< HEAD
   vi: "Tiếng Việt",
   id: "Bahasa Indonesia",
   es: "Español",
   hi: "हिन्दी",
   ar: "العربية",
-=======
->>>>>>> 48212043e6dd306e986b9e876f73f7434b4c8a76
 }
 
 export const languageFlags: Record<string, string> = {
@@ -868,12 +862,9 @@ export const languageFlags: Record<string, string> = {
   zh: "🇨🇳",
   ja: "🇯🇵",
   th: "🇹🇭",
-<<<<<<< HEAD
   vi: "🇻🇳",
   id: "🇮🇩",
   es: "🇪🇸",
   hi: "🇮🇳",
   ar: "🇸🇦",
-=======
->>>>>>> 48212043e6dd306e986b9e876f73f7434b4c8a76
 }
