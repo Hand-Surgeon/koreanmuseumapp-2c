@@ -1,5 +1,6 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+<<<<<<< HEAD
 # Dependencies
 node_modules/
 /.pnp
@@ -24,10 +25,24 @@ node_modules/
 *.pem
 
 # Debug
+=======
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# debug
+>>>>>>> 48212043e6dd306e986b9e876f73f7434b4c8a76
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+<<<<<<< HEAD
 lerna-debug.log*
 
 # Local env files
@@ -174,3 +189,15 @@ dist
 # package-lock.json
 # yarn.lock
 # pnpm-lock.yaml
+=======
+
+# env files
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+>>>>>>> 48212043e6dd306e986b9e876f73f7434b4c8a76

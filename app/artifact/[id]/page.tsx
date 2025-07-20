@@ -135,6 +135,7 @@ function ArtifactDetailClient({ id }: { id: string }) {
         {/* Expanded Image Modal */}
         {isImageExpanded && (
           <div
+<<<<<<< HEAD
             className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center"
             onClick={() => setIsImageExpanded(false)}
           >
@@ -202,6 +203,29 @@ function ArtifactDetailClient({ id }: { id: string }) {
                   </div>
                 </>
               )}
+=======
+            className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+            onClick={() => setIsImageExpanded(false)}
+          >
+            <div className="relative max-w-4xl max-h-full">
+              <AspectRatio ratio={4 / 3}>
+                <Image
+                  src={images[currentImageIndex] || "/placeholder.svg?height=800&width=1200&text=Museum+Artifact"}
+                  alt={artifact.name[language]}
+                  fill
+                  className="object-contain"
+                  sizes="100vw"
+                />
+              </AspectRatio>
+              <Button
+                variant="secondary"
+                size="icon"
+                className="absolute top-4 right-4 rounded-full"
+                onClick={() => setIsImageExpanded(false)}
+              >
+                ✕
+              </Button>
+>>>>>>> 48212043e6dd306e986b9e876f73f7434b4c8a76
             </div>
           </div>
         )}
