@@ -1,0 +1,113 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  deploy:
+    name: Deploy to Vercel
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+      
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      
+      - name: Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+      
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🚀 배포가 완료되었습니다! [라이브 사이트 확인](https://museum100.kr)'
+            })
+
+  post-deploy:
+    name: Post Deployment Tasks
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Purge CDN Cache
+        run: |
+          echo "CDN 캐시 퍼지 중..."
+          # CDN 캐시 퍼지 명령어 실행
+      
+      - name: Warm up cache
+        run: |
+          echo "캐시 워밍업 중..."
+          curl -s https://museum100.kr/ko > /dev/null
+          curl -s https://museum100.kr/en > /dev/null
+          curl -s https://museum100.kr/zh > /dev/null
+          curl -s https://museum100.kr/ja > /dev/null
+          curl -s https://museum100.kr/th > /dev/null
+      
+      - name: Notify Slack
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: |
+            배포 상태: ${{ job.status }}
+            커밋: ${{ github.sha }}
+            배포자: ${{ github.actor }}
+            메시지: ${{ github.event.head_commit.message }}
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+  smoke-test:
+    name: Smoke Tests
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Wait for deployment
+        run: sleep 30
+      
+      - name: Check homepage
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://museum100.kr)
+          if [ $response -ne 200 ]; then
+            echo "홈페이지 접속 실패: HTTP $response"
+            exit 1
+          fi
+      
+      - name: Check API health
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://museum100.kr/api/health)
+          if [ $response -ne 200 ]; then
+            echo "API 헬스체크 실패: HTTP $response"
+            exit 1
+          fi
+      
+      - name: Run Lighthouse
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          urls: https://museum100.kr
+          uploadArtifacts: true
+          temporaryPublicStorage: true
