@@ -61,17 +61,62 @@ export async function generateMetadata({
       },
       description: "ค้นพบผลงานชิ้นเอก 100 ชิ้นจากพิพิธภัณฑสถานแห่งชาติเกาหลี แสดงแก่นแท้ของมรดกวัฒนธรรมเกาหลีตั้งแต่ยุคก่อนประวัติศาสตร์ถึงยุคสมัยใหม่",
     },
+    vi: {
+      title: {
+        default: "Bảo tàng Quốc gia Hàn Quốc - 100 Kiệt tác",
+        template: "%s | Bảo tàng Quốc gia Hàn Quốc"
+      },
+      description: "Khám phá 100 kiệt tác từ Bảo tàng Quốc gia Hàn Quốc, thể hiện tinh hoa di sản văn hóa Hàn Quốc từ thời tiền sử đến hiện đại.",
+    },
+    id: {
+      title: {
+        default: "Museum Nasional Korea - 100 Karya Masterpiece",
+        template: "%s | Museum Nasional Korea"
+      },
+      description: "Temukan 100 karya masterpiece dari Museum Nasional Korea, menampilkan esensi warisan budaya Korea dari prasejarah hingga modern.",
+    },
+    es: {
+      title: {
+        default: "Museo Nacional de Corea - 100 Obras Maestras",
+        template: "%s | Museo Nacional de Corea"
+      },
+      description: "Descubre 100 obras maestras del Museo Nacional de Corea, mostrando la esencia del patrimonio cultural coreano desde la prehistoria hasta la era moderna.",
+    },
+    ar: {
+      title: {
+        default: "المتحف الوطني الكوري - 100 تحفة فنية",
+        template: "%s | المتحف الوطني الكوري"
+      },
+      description: "اكتشف 100 تحفة فنية من المتحف الوطني الكوري، تعرض جوهر التراث الثقافي الكوري من عصور ما قبل التاريخ إلى العصر الحديث.",
+    },
+    fr: {
+      title: {
+        default: "Musée National de Corée - 100 Chefs-d'œuvre",
+        template: "%s | Musée National de Corée"
+      },
+      description: "Découvrez 100 chefs-d'œuvre du Musée National de Corée, présentant l'essence du patrimoine culturel coréen de la préhistoire à l'ère moderne.",
+    },
   }
 
   return {
     ...metadata[locale],
+    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://museum100.kr'),
     keywords: ["국립중앙박물관", "한국 문화재", "박물관", "유물", "국보", "보물", "문화유산"],
     authors: [{ name: "국립중앙박물관" }],
     creator: "국립중앙박물관",
     publisher: "국립중앙박물관",
     openGraph: {
       type: "website",
-      locale: locale === 'ko' ? 'ko_KR' : locale === 'en' ? 'en_US' : locale === 'zh' ? 'zh_CN' : locale === 'ja' ? 'ja_JP' : 'th_TH',
+      locale: locale === 'ko' ? 'ko_KR' : 
+              locale === 'en' ? 'en_US' : 
+              locale === 'zh' ? 'zh_CN' : 
+              locale === 'ja' ? 'ja_JP' : 
+              locale === 'th' ? 'th_TH' :
+              locale === 'vi' ? 'vi_VN' :
+              locale === 'id' ? 'id_ID' :
+              locale === 'es' ? 'es_ES' :
+              locale === 'ar' ? 'ar_SA' :
+              locale === 'fr' ? 'fr_FR' : 'en_US',
       url: `https://museum100.kr/${locale}`,
       siteName: metadata[locale].title?.default as string,
       ...metadata[locale],
@@ -108,7 +153,7 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html lang={locale} dir="ltr">
+    <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#1e40af" />

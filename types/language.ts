@@ -1,4 +1,4 @@
-export type Language = "ko" | "en" | "zh" | "ja" | "th"
+export type Language = "ko" | "en" | "zh" | "ja" | "th" | "vi" | "id" | "es" | "ar" | "fr"
 
 export interface Translation {
   // 공통

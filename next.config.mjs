@@ -51,8 +51,17 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  allowedDevOrigins: [
+    '6ae6def3-0c25-4445-bd8b-e2025f548b35-00-2misp18itvbe8.pike.replit.dev',
+    'localhost:3000'
+  ],
   images: {
-    domains: ['via.placeholder.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+      },
+    ],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],

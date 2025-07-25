@@ -422,48 +422,48 @@ export const translations: Record<string, Translation> = {
     culturalPropertyDesignation: "การกำหนดทรัพย์สินทางวัฒนธรรม",
   },
   vi: {
-    // Chung
+    // 공통
     nationalMuseum: "Bảo tàng Quốc gia Hàn Quốc",
     masterpieces100: "Kiệt tác",
-    totalItems: "Tổng",
+    totalItems: "Tổng cộng",
     nationalTreasure: "Quốc bảo",
     treasure: "Bảo vật",
     featured: "Nổi bật",
     search: "Tìm kiếm",
-    filter: "Lọc",
+    filter: "Bộ lọc",
     category: "Danh mục",
     period: "Thời kỳ",
     all: "Tất cả",
     noResults: "Không tìm thấy kết quả",
-    noResultsDesc: "Thử từ khóa tìm kiếm khác",
+    noResultsDesc: "Vui lòng thử từ khóa khác",
     resetFilters: "Đặt lại bộ lọc",
-    backToHome: "Về trang chủ",
+    backToHome: "Quay lại trang chủ",
 
-    // Trang chính
-    subtitle: "Kho báu Di sản Văn hóa Hàn Quốc",
+    // 메인 페이지
+    subtitle: "Kho tàng di sản văn hóa Hàn Quốc",
     koreanCulturalHeritage: "Phòng triển lãm",
     specialExhibition: "Triển lãm đặc biệt",
-    preciousCulturalProperties: "Tài sản văn hóa quý giá",
+    preciousCulturalProperties: "Di sản văn hóa quý giá",
     essenceOfKoreanCulture: "Tinh hoa văn hóa Hàn Quốc",
 
-    // Phòng triển lãm
+    // 전시관
     archaeologyHall: "Phòng Khảo cổ",
     artHall: "Phòng Nghệ thuật",
     historyHall: "Phòng Lịch sử",
     asiaHall: "Phòng Châu Á",
     donationHall: "Phòng Hiến tặng",
 
-    // Mô tả phòng triển lãm
-    archaeologyDesc: "Hiện vật khảo cổ từ thời tiền sử đến thời Tân La thống nhất",
-    artDesc: "Nghệ thuật truyền thống Hàn Quốc bao gồm hội họa, điêu khắc và thủ công",
-    historyDesc: "Tài liệu lịch sử từ thời cổ đại đến cận đại",
-    asiaDesc: "Di sản văn hóa từ các nước châu Á",
-    donationDesc: "Bộ sưu tập quý giá từ các nhà tặng cá nhân",
+    // 전시관 설명
+    archaeologyDesc: "Hiện vật khảo cổ từ thời tiền sử đến Silla thống nhất",
+    artDesc: "Nghệ thuật truyền thống Hàn Quốc",
+    historyDesc: "Tài liệu lịch sử từ cổ đại đến cận đại",
+    asiaDesc: "Di sản văn hóa các nước châu Á",
+    donationDesc: "Bộ sưu tập quý giá từ các nhà hảo tâm",
 
-    // Danh mục
+    // 카테고리
     pottery: "Gốm",
     bronze: "Đồ đồng",
-    metalcraft: "Kim loại",
+    metalcraft: "Kim loại thủ công",
     ceramics: "Gốm sứ",
     sculpture: "Điêu khắc",
     calligraphy: "Thư pháp",
@@ -479,22 +479,22 @@ export const translations: Record<string, Translation> = {
     lacquerware: "Đồ sơn mài",
     buddhistPainting: "Tranh Phật",
 
-    // Thời kỳ
+    // 시대
     paleolithic: "Thời kỳ đồ đá cũ",
     neolithic: "Thời kỳ đồ đá mới",
     bronzeAge: "Thời kỳ đồ đồng",
-    threeKingdoms: "Thời kỳ Tam Quốc",
-    unifiedSilla: "Tân La thống nhất",
-    goryeo: "Cao Ly",
-    joseon: "Triều Tiên",
+    threeKingdoms: "Tam Quốc",
+    unifiedSilla: "Silla thống nhất",
+    goryeo: "Goryeo",
+    joseon: "Joseon",
     china: "Trung Quốc",
     japan: "Nhật Bản",
     centralAsia: "Trung Á",
     southeastAsia: "Đông Nam Á",
 
-    // Khác
+    // 기타
     mainWorks: "Tác phẩm chính",
-    moreArtifacts: "Thêm hiện vật",
+    moreArtifacts: "Xem thêm hiện vật",
     artifactList: "Danh sách hiện vật",
     relatedArtifacts: "Hiện vật liên quan",
     detailedInfo: "Thông tin chi tiết",
@@ -503,12 +503,12 @@ export const translations: Record<string, Translation> = {
     location: "Nơi phát hiện",
     exhibitionRoom: "Phòng triển lãm",
     artifactNumber: "Số hiện vật",
-    culturalPropertyDesignation: "Chỉ định tài sản văn hóa",
+    culturalPropertyDesignation: "Chỉ định di sản văn hóa",
   },
   id: {
-    // Umum
+    // 공통
     nationalMuseum: "Museum Nasional Korea",
-    masterpieces100: "Karya Agung",
+    masterpieces100: "Karya Masterpiece",
     totalItems: "Total",
     nationalTreasure: "Harta Nasional",
     treasure: "Harta Karun",
@@ -518,43 +518,43 @@ export const translations: Record<string, Translation> = {
     category: "Kategori",
     period: "Periode",
     all: "Semua",
-    noResults: "Tidak ada hasil ditemukan",
-    noResultsDesc: "Coba kata kunci lain",
-    resetFilters: "Reset Filter",
-    backToHome: "Kembali ke Beranda",
+    noResults: "Tidak ada hasil pencarian",
+    noResultsDesc: "Silakan coba kata kunci lain",
+    resetFilters: "Reset filter",
+    backToHome: "Kembali ke beranda",
 
-    // Halaman utama
+    // 메인 페이지
     subtitle: "Khazanah Warisan Budaya Korea",
     koreanCulturalHeritage: "Ruang Pameran",
     specialExhibition: "Pameran Khusus",
-    preciousCulturalProperties: "Properti Budaya Berharga",
-    essenceOfKoreanCulture: "Inti Budaya Korea",
+    preciousCulturalProperties: "Warisan Budaya Berharga",
+    essenceOfKoreanCulture: "Esensi Budaya Korea",
 
-    // Ruang pameran
+    // 전시관
     archaeologyHall: "Ruang Arkeologi",
     artHall: "Ruang Seni",
     historyHall: "Ruang Sejarah",
     asiaHall: "Ruang Asia",
     donationHall: "Ruang Donasi",
 
-    // Deskripsi ruang pameran
-    archaeologyDesc: "Artefak arkeologi dari zaman prasejarah hingga Silla Bersatu",
-    artDesc: "Seni tradisional Korea termasuk lukisan, patung, dan kerajinan",
-    historyDesc: "Materi sejarah dari zaman kuno hingga modern awal",
-    asiaDesc: "Warisan budaya dari negara-negara Asia",
-    donationDesc: "Koleksi berharga dari donatur individu",
+    // 전시관 설명
+    archaeologyDesc: "Artefak arkeologi dari prasejarah hingga Silla Bersatu",
+    artDesc: "Seni tradisional Korea",
+    historyDesc: "Dokumen sejarah dari kuno hingga modern",
+    asiaDesc: "Warisan budaya negara-negara Asia",
+    donationDesc: "Koleksi berharga dari para donatur",
 
-    // Kategori
+    // 카테고리
     pottery: "Tembikar",
     bronze: "Perunggu",
-    metalcraft: "Kerajinan Logam",
+    metalcraft: "Kerajinan logam",
     ceramics: "Keramik",
     sculpture: "Patung",
     calligraphy: "Kaligrafi",
     painting: "Lukisan",
     jewelry: "Perhiasan",
     architecture: "Arsitektur",
-    stoneTools: "Alat Batu",
+    stoneTools: "Alat batu",
     weapons: "Senjata",
     printing: "Percetakan",
     maps: "Peta",
@@ -563,34 +563,34 @@ export const translations: Record<string, Translation> = {
     lacquerware: "Pernis",
     buddhistPainting: "Lukisan Buddha",
 
-    // Periode
-    paleolithic: "Paleolitik",
-    neolithic: "Neolitik",
+    // 시대
+    paleolithic: "Zaman Batu Tua",
+    neolithic: "Zaman Batu Baru",
     bronzeAge: "Zaman Perunggu",
     threeKingdoms: "Tiga Kerajaan",
     unifiedSilla: "Silla Bersatu",
     goryeo: "Goryeo",
     joseon: "Joseon",
-    china: "Cina",
+    china: "Tiongkok",
     japan: "Jepang",
     centralAsia: "Asia Tengah",
     southeastAsia: "Asia Tenggara",
 
-    // Lainnya
-    mainWorks: "Karya Utama",
-    moreArtifacts: "Artefak Lainnya",
-    artifactList: "Daftar Artefak",
-    relatedArtifacts: "Artefak Terkait",
-    detailedInfo: "Informasi Detail",
+    // 기타
+    mainWorks: "Karya utama",
+    moreArtifacts: "Lebih banyak artefak",
+    artifactList: "Daftar artefak",
+    relatedArtifacts: "Artefak terkait",
+    detailedInfo: "Informasi detail",
     material: "Bahan",
     dimensions: "Ukuran",
-    location: "Lokasi",
-    exhibitionRoom: "Ruang Pameran",
-    artifactNumber: "Nomor Artefak",
-    culturalPropertyDesignation: "Penetapan Properti Budaya",
+    location: "Lokasi penemuan",
+    exhibitionRoom: "Ruang pameran",
+    artifactNumber: "Nomor artefak",
+    culturalPropertyDesignation: "Penetapan warisan budaya",
   },
   es: {
-    // Común
+    // 공통
     nationalMuseum: "Museo Nacional de Corea",
     masterpieces100: "Obras Maestras",
     totalItems: "Total",
@@ -603,51 +603,51 @@ export const translations: Record<string, Translation> = {
     period: "Período",
     all: "Todo",
     noResults: "No se encontraron resultados",
-    noResultsDesc: "Prueba con otros términos de búsqueda",
-    resetFilters: "Restablecer Filtros",
-    backToHome: "Volver al Inicio",
+    noResultsDesc: "Por favor, intente con otra palabra clave",
+    resetFilters: "Restablecer filtros",
+    backToHome: "Volver al inicio",
 
-    // Página principal
+    // 메인 페이지
     subtitle: "Tesoro del Patrimonio Cultural Coreano",
-    koreanCulturalHeritage: "Salas de Exhibición",
-    specialExhibition: "Exhibición Especial",
-    preciousCulturalProperties: "Propiedades Culturales Preciosas",
+    koreanCulturalHeritage: "Salas de Exposición",
+    specialExhibition: "Exposición Especial",
+    preciousCulturalProperties: "Patrimonio Cultural Valioso",
     essenceOfKoreanCulture: "Esencia de la Cultura Coreana",
 
-    // Salas de exhibición
+    // 전시관
     archaeologyHall: "Sala de Arqueología",
     artHall: "Sala de Arte",
     historyHall: "Sala de Historia",
     asiaHall: "Sala de Asia",
     donationHall: "Sala de Donaciones",
 
-    // Descripciones de las salas
+    // 전시관 설명
     archaeologyDesc: "Artefactos arqueológicos desde la prehistoria hasta Silla Unificada",
-    artDesc: "Arte tradicional coreano incluyendo pinturas, esculturas y artesanías",
-    historyDesc: "Materiales históricos desde la antigüedad hasta los tiempos modernos tempranos",
+    artDesc: "Arte tradicional coreano",
+    historyDesc: "Documentos históricos desde la antigüedad hasta la era moderna",
     asiaDesc: "Patrimonio cultural de países asiáticos",
-    donationDesc: "Colecciones preciosas de donantes individuales",
+    donationDesc: "Valiosas colecciones de donantes",
 
-    // Categorías
+    // 카테고리
     pottery: "Cerámica",
     bronze: "Bronce",
-    metalcraft: "Metalistería",
-    ceramics: "Cerámicas",
+    metalcraft: "Orfebrería",
+    ceramics: "Porcelana",
     sculpture: "Escultura",
     calligraphy: "Caligrafía",
     painting: "Pintura",
     jewelry: "Joyería",
     architecture: "Arquitectura",
-    stoneTools: "Herramientas de Piedra",
+    stoneTools: "Herramientas de piedra",
     weapons: "Armas",
     printing: "Impresión",
     maps: "Mapas",
     documents: "Documentos",
     books: "Libros",
-    lacquerware: "Lacados",
-    buddhistPainting: "Pintura Budista",
+    lacquerware: "Laca",
+    buddhistPainting: "Pintura budista",
 
-    // Períodos
+    // 시대
     paleolithic: "Paleolítico",
     neolithic: "Neolítico",
     bronzeAge: "Edad de Bronce",
@@ -660,105 +660,21 @@ export const translations: Record<string, Translation> = {
     centralAsia: "Asia Central",
     southeastAsia: "Sudeste Asiático",
 
-    // Otros
-    mainWorks: "Obras Principales",
-    moreArtifacts: "Más Artefactos",
-    artifactList: "Lista de Artefactos",
-    relatedArtifacts: "Artefactos Relacionados",
-    detailedInfo: "Información Detallada",
+    // 기타
+    mainWorks: "Obras principales",
+    moreArtifacts: "Más artefactos",
+    artifactList: "Lista de artefactos",
+    relatedArtifacts: "Artefactos relacionados",
+    detailedInfo: "Información detallada",
     material: "Material",
     dimensions: "Dimensiones",
-    location: "Ubicación",
-    exhibitionRoom: "Sala de Exhibición",
-    artifactNumber: "Número de Artefacto",
-    culturalPropertyDesignation: "Designación de Propiedad Cultural",
-  },
-  hi: {
-    // सामान्य
-    nationalMuseum: "कोरिया राष्ट्रीय संग्रहालय",
-    masterpieces100: "कृतियाँ",
-    totalItems: "कुल",
-    nationalTreasure: "राष्ट्रीय खजाना",
-    treasure: "खजाना",
-    featured: "विशेष",
-    search: "खोज",
-    filter: "फ़िल्टर",
-    category: "श्रेणी",
-    period: "काल",
-    all: "सभी",
-    noResults: "कोई परिणाम नहीं मिला",
-    noResultsDesc: "अन्य खोज शब्द आज़माएं",
-    resetFilters: "फ़िल्टर रीसेट करें",
-    backToHome: "होम पर वापस जाएं",
-
-    // मुख्य पृष्ठ
-    subtitle: "कोरियाई सांस्कृतिक विरासत का खजाना",
-    koreanCulturalHeritage: "प्रदर्शनी हॉल",
-    specialExhibition: "विशेष प्रदर्शनी",
-    preciousCulturalProperties: "बहुमूल्य सांस्कृतिक संपत्तियां",
-    essenceOfKoreanCulture: "कोरियाई संस्कृति का सार",
-
-    // प्रदर्शनी हॉल
-    archaeologyHall: "पुरातत्व हॉल",
-    artHall: "कला हॉल",
-    historyHall: "इतिहास हॉल",
-    asiaHall: "एशिया हॉल",
-    donationHall: "दान हॉल",
-
-    // हॉल विवरण
-    archaeologyDesc: "प्रागैतिहासिक काल से एकीकृत सिल्ला तक के पुरातात्विक कलाकृतियां",
-    artDesc: "पारंपरिक कोरियाई कला जिसमें चित्रकला, मूर्तिकला और शिल्प शामिल हैं",
-    historyDesc: "प्राचीन से प्रारंभिक आधुनिक काल तक की ऐतिहासिक सामग्री",
-    asiaDesc: "एशियाई देशों की सांस्कृतिक विरासत",
-    donationDesc: "व्यक्तिगत दानदाताओं से बहुमूल्य संग्रह",
-
-    // श्रेणियां
-    pottery: "मिट्टी के बर्तन",
-    bronze: "कांस्य",
-    metalcraft: "धातु शिल्प",
-    ceramics: "सिरेमिक",
-    sculpture: "मूर्तिकला",
-    calligraphy: "सुलेख",
-    painting: "चित्रकला",
-    jewelry: "आभूषण",
-    architecture: "वास्तुकला",
-    stoneTools: "पत्थर के औजार",
-    weapons: "हथियार",
-    printing: "मुद्रण",
-    maps: "नक्शे",
-    documents: "दस्तावेज़",
-    books: "पुस्तकें",
-    lacquerware: "लाख का सामान",
-    buddhistPainting: "बौद्ध चित्रकला",
-
-    // काल
-    paleolithic: "पुरापाषाण काल",
-    neolithic: "नवपाषाण काल",
-    bronzeAge: "कांस्य युग",
-    threeKingdoms: "तीन राज्य",
-    unifiedSilla: "एकीकृत सिल्ला",
-    goryeo: "गोरयो",
-    joseon: "जोसियन",
-    china: "चीन",
-    japan: "जापान",
-    centralAsia: "मध्य एशिया",
-    southeastAsia: "दक्षिण पूर्व एशिया",
-
-    // अन्य
-    mainWorks: "मुख्य कार्य",
-    moreArtifacts: "अधिक कलाकृतियां",
-    artifactList: "कलाकृति सूची",
-    relatedArtifacts: "संबंधित कलाकृतियां",
-    detailedInfo: "विस्तृत जानकारी",
-    material: "सामग्री",
-    dimensions: "आयाम",
-    location: "स्थान",
-    exhibitionRoom: "प्रदर्शनी कक्ष",
-    artifactNumber: "कलाकृति संख्या",
-    culturalPropertyDesignation: "सांस्कृतिक संपत्ति पदनाम",
+    location: "Lugar de hallazgo",
+    exhibitionRoom: "Sala de exposición",
+    artifactNumber: "Número de artefacto",
+    culturalPropertyDesignation: "Designación de patrimonio cultural",
   },
   ar: {
-    // عام
+    // 공통
     nationalMuseum: "المتحف الوطني الكوري",
     masterpieces100: "روائع",
     totalItems: "المجموع",
@@ -771,75 +687,159 @@ export const translations: Record<string, Translation> = {
     period: "الفترة",
     all: "الكل",
     noResults: "لم يتم العثور على نتائج",
-    noResultsDesc: "جرب كلمات بحث أخرى",
+    noResultsDesc: "يرجى المحاولة بكلمة مفتاحية أخرى",
     resetFilters: "إعادة تعيين الفلاتر",
     backToHome: "العودة إلى الصفحة الرئيسية",
 
-    // الصفحة الرئيسية
+    // 메인 페이지
     subtitle: "كنز التراث الثقافي الكوري",
     koreanCulturalHeritage: "قاعات العرض",
     specialExhibition: "معرض خاص",
-    preciousCulturalProperties: "ممتلكات ثقافية ثمينة",
+    preciousCulturalProperties: "التراث الثقافي الثمين",
     essenceOfKoreanCulture: "جوهر الثقافة الكورية",
 
-    // قاعات العرض
+    // 전시관
     archaeologyHall: "قاعة الآثار",
-    artHall: "قاعة الفن",
+    artHall: "قاعة الفنون",
     historyHall: "قاعة التاريخ",
     asiaHall: "قاعة آسيا",
     donationHall: "قاعة التبرعات",
 
-    // وصف القاعات
-    archaeologyDesc: "القطع الأثرية من عصور ما قبل التاريخ إلى فترة شيلا الموحدة",
-    artDesc: "الفن الكوري التقليدي بما في ذلك اللوحات والمنحوتات والحرف اليدوية",
-    historyDesc: "المواد التاريخية من العصور القديمة إلى العصر الحديث المبكر",
-    asiaDesc: "التراث الثقافي من البلدان الآسيوية",
-    donationDesc: "مجموعات ثمينة من المتبرعين الأفراد",
+    // 전시관 설명
+    archaeologyDesc: "القطع الأثرية من عصور ما قبل التاريخ إلى سيلا الموحدة",
+    artDesc: "الفن الكوري التقليدي",
+    historyDesc: "الوثائق التاريخية من العصور القديمة إلى الحديثة",
+    asiaDesc: "التراث الثقافي للدول الآسيوية",
+    donationDesc: "مجموعات قيمة من المتبرعين",
 
-    // الفئات
-    pottery: "الفخار",
-    bronze: "البرونز",
-    metalcraft: "الحرف المعدنية",
-    ceramics: "السيراميك",
-    sculpture: "النحت",
-    calligraphy: "الخط",
-    painting: "الرسم",
-    jewelry: "المجوهرات",
-    architecture: "العمارة",
+    // 카테고리
+    pottery: "فخار",
+    bronze: "برونز",
+    metalcraft: "حرف معدنية",
+    ceramics: "خزف",
+    sculpture: "نحت",
+    calligraphy: "خط",
+    painting: "رسم",
+    jewelry: "مجوهرات",
+    architecture: "عمارة",
     stoneTools: "أدوات حجرية",
-    weapons: "الأسلحة",
-    printing: "الطباعة",
-    maps: "الخرائط",
-    documents: "الوثائق",
-    books: "الكتب",
-    lacquerware: "أدوات اللك",
-    buddhistPainting: "اللوحات البوذية",
+    weapons: "أسلحة",
+    printing: "طباعة",
+    maps: "خرائط",
+    documents: "وثائق",
+    books: "كتب",
+    lacquerware: "أعمال اللك",
+    buddhistPainting: "لوحات بوذية",
 
-    // الفترات
+    // 시대
     paleolithic: "العصر الحجري القديم",
     neolithic: "العصر الحجري الحديث",
     bronzeAge: "العصر البرونزي",
     threeKingdoms: "الممالك الثلاث",
-    unifiedSilla: "شيلا الموحدة",
-    goryeo: "جوريو",
+    unifiedSilla: "سيلا الموحدة",
+    goryeo: "غوريو",
     joseon: "جوسون",
     china: "الصين",
     japan: "اليابان",
     centralAsia: "آسيا الوسطى",
     southeastAsia: "جنوب شرق آسيا",
 
-    // أخرى
+    // 기타
     mainWorks: "الأعمال الرئيسية",
     moreArtifacts: "المزيد من القطع الأثرية",
     artifactList: "قائمة القطع الأثرية",
-    relatedArtifacts: "القطع الأثرية ذات الصلة",
+    relatedArtifacts: "قطع أثرية ذات صلة",
     detailedInfo: "معلومات مفصلة",
     material: "المادة",
     dimensions: "الأبعاد",
-    location: "الموقع",
+    location: "موقع الاكتشاف",
     exhibitionRoom: "قاعة العرض",
     artifactNumber: "رقم القطعة الأثرية",
-    culturalPropertyDesignation: "تعيين الممتلكات الثقافية",
+    culturalPropertyDesignation: "تصنيف التراث الثقافي",
+  },
+  fr: {
+    // 공통
+    nationalMuseum: "Musée National de Corée",
+    masterpieces100: "Chefs-d'œuvre",
+    totalItems: "Total",
+    nationalTreasure: "Trésor National",
+    treasure: "Trésor",
+    featured: "En vedette",
+    search: "Rechercher",
+    filter: "Filtrer",
+    category: "Catégorie",
+    period: "Période",
+    all: "Tout",
+    noResults: "Aucun résultat trouvé",
+    noResultsDesc: "Veuillez essayer avec un autre mot-clé",
+    resetFilters: "Réinitialiser les filtres",
+    backToHome: "Retour à l'accueil",
+
+    // 메인 페이지
+    subtitle: "Trésor du patrimoine culturel coréen",
+    koreanCulturalHeritage: "Salles d'exposition",
+    specialExhibition: "Exposition spéciale",
+    preciousCulturalProperties: "Patrimoine culturel précieux",
+    essenceOfKoreanCulture: "Essence de la culture coréenne",
+
+    // 전시관
+    archaeologyHall: "Salle d'archéologie",
+    artHall: "Salle d'art",
+    historyHall: "Salle d'histoire",
+    asiaHall: "Salle d'Asie",
+    donationHall: "Salle des donations",
+
+    // 전시관 설명
+    archaeologyDesc: "Artefacts archéologiques de la préhistoire à Silla unifié",
+    artDesc: "Art traditionnel coréen",
+    historyDesc: "Documents historiques de l'antiquité à l'ère moderne",
+    asiaDesc: "Patrimoine culturel des pays asiatiques",
+    donationDesc: "Collections précieuses de donateurs",
+
+    // 카테고리
+    pottery: "Poterie",
+    bronze: "Bronze",
+    metalcraft: "Orfèvrerie",
+    ceramics: "Céramique",
+    sculpture: "Sculpture",
+    calligraphy: "Calligraphie",
+    painting: "Peinture",
+    jewelry: "Bijoux",
+    architecture: "Architecture",
+    stoneTools: "Outils en pierre",
+    weapons: "Armes",
+    printing: "Impression",
+    maps: "Cartes",
+    documents: "Documents",
+    books: "Livres",
+    lacquerware: "Laque",
+    buddhistPainting: "Peinture bouddhiste",
+
+    // 시대
+    paleolithic: "Paléolithique",
+    neolithic: "Néolithique",
+    bronzeAge: "Âge du bronze",
+    threeKingdoms: "Trois Royaumes",
+    unifiedSilla: "Silla unifié",
+    goryeo: "Goryeo",
+    joseon: "Joseon",
+    china: "Chine",
+    japan: "Japon",
+    centralAsia: "Asie centrale",
+    southeastAsia: "Asie du Sud-Est",
+
+    // 기타
+    mainWorks: "Œuvres principales",
+    moreArtifacts: "Plus d'artefacts",
+    artifactList: "Liste des artefacts",
+    relatedArtifacts: "Artefacts connexes",
+    detailedInfo: "Informations détaillées",
+    material: "Matériau",
+    dimensions: "Dimensions",
+    location: "Lieu de découverte",
+    exhibitionRoom: "Salle d'exposition",
+    artifactNumber: "Numéro d'artefact",
+    culturalPropertyDesignation: "Désignation du patrimoine culturel",
   },
 }
 
@@ -852,8 +852,8 @@ export const languageNames: Record<string, string> = {
   vi: "Tiếng Việt",
   id: "Bahasa Indonesia",
   es: "Español",
-  hi: "हिन्दी",
   ar: "العربية",
+  fr: "Français",
 }
 
 export const languageFlags: Record<string, string> = {
@@ -865,6 +865,6 @@ export const languageFlags: Record<string, string> = {
   vi: "🇻🇳",
   id: "🇮🇩",
   es: "🇪🇸",
-  hi: "🇮🇳",
   ar: "🇸🇦",
+  fr: "🇫🇷",
 }

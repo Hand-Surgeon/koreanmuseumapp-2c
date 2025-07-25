@@ -8,6 +8,7 @@ import { StructuredData } from "@/components/structured-data"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://museum100.kr'),
   title: {
     default: "국립중앙박물관 명품 100선",
     template: "%s | 국립중앙박물관"
