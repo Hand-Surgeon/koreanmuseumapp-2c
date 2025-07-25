@@ -25,10 +25,16 @@ export default function ArtifactDetailClient({ artifact, relatedArtifacts }: Art
   const [isLiked, setIsLiked] = useState(false)
   const [isImageExpanded, setIsImageExpanded] = useState(false)
 
+  // 실제 이미지가 있으면 사용, 없으면 placeholder 사용
+  const baseImage = artifact.image || `https://via.placeholder.com/600x600?text=${encodeURIComponent(artifact.name[language])}`
+  
   const images = [
-    artifact.image,
-    artifact.image.replace("&text=", "&text=측면+"),
-    artifact.image.replace("&text=", "&text=세부+"),
+    baseImage,
+    // 추가 이미지가 없으면 placeholder만 표시
+    ...(artifact.image ? [] : [
+      `https://via.placeholder.com/600x600?text=${encodeURIComponent(artifact.name[language])}+측면`,
+      `https://via.placeholder.com/600x600?text=${encodeURIComponent(artifact.name[language])}+세부`,
+    ])
   ]
 
   const hallConfig = hallConfigs[artifact.hall as keyof typeof hallConfigs]
