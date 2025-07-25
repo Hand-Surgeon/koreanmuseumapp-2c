@@ -21,9 +21,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: Locale }
+  params: Promise<{ locale: Locale }>
 }): Promise<Metadata> {
-  const locale = params.locale
+  const { locale } = await params
 
   const metadata: Record<Locale, Metadata> = {
     ko: {
@@ -93,20 +93,22 @@ export async function generateMetadata({
   }
 }
 
-export default function LocaleLayout({
+export default async function LocaleLayout({
   children,
   params,
 }: {
   children: React.ReactNode
-  params: { locale: string }
+  params: Promise<{ locale: string }>
 }) {
+  const { locale } = await params
+  
   // 유효한 locale인지 확인
-  if (!i18n.locales.includes(params.locale as Locale)) {
+  if (!i18n.locales.includes(locale as Locale)) {
     notFound()
   }
 
   return (
-    <html lang={params.locale} dir="ltr">
+    <html lang={locale} dir="ltr">
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#1e40af" />
@@ -120,7 +122,7 @@ export default function LocaleLayout({
       <body className={inter.className}>
         <SkipToContent />
         <ErrorBoundary>
-          <LanguageProvider initialLocale={params.locale as Locale}>
+          <LanguageProvider initialLocale={locale as Locale}>
             <FavoritesProvider>
               {children}
               <PWAInstallPrompt />
