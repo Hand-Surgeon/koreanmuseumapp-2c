@@ -4,7 +4,7 @@ import withBundleAnalyzer from '@next/bundle-analyzer';
 
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-inline' *.google-analytics.com *.googletagmanager.com;
+  script-src 'self' 'unsafe-inline' 'unsafe-eval' *.google-analytics.com *.googletagmanager.com;
   style-src 'self' 'unsafe-inline';
   img-src 'self' blob: data: https: *.placeholder.com res.cloudinary.com *.imgix.net;
   font-src 'self';
@@ -12,6 +12,7 @@ const ContentSecurityPolicy = `
   base-uri 'self';
   form-action 'self';
   frame-ancestors 'none';
+  connect-src 'self' ws: wss:;
   upgrade-insecure-requests;
 `
 

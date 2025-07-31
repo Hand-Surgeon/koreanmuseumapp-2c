@@ -9,7 +9,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { artifacts } from "@/data/artifacts"
 import { useLanguage } from "@/hooks/useLanguage"
-import { LanguageSelectorDropdown } from "@/components/language-selector-dropdown"
+import { LanguageSelectorForm } from "@/components/language-selector-form"
 import { ArtifactCard } from "@/components/artifact-card"
 import { HallStatistics } from "@/components/hall-statistics"
 import { calculateHallStats, filterArtifacts } from "@/lib/artifact-utils"
@@ -59,7 +59,7 @@ export default function HomePage() {
               <h1 className="text-2xl font-bold text-gray-900">{t.nationalMuseum}</h1>
               <p className="text-gray-600 text-sm">{t.koreanCulturalHeritage}</p>
             </div>
-            <LanguageSelectorDropdown />
+            <LanguageSelectorForm />
           </div>
           <SearchAutocomplete
             onSearch={setSearchTerm}
@@ -111,7 +111,7 @@ export default function HomePage() {
               <h2 className="text-xl font-semibold text-gray-900 mb-4">{t.specialExhibition}</h2>
               <div className="space-y-4">
                 {halls.map((hall) => (
-                  <Link key={hall.name} href={`hall/${getHallSlug(hall.name)}`}>
+                  <Link key={hall.name} href={`/${language}/hall/${getHallSlug(hall.name)}`}>
                     <Card className={`${hall.color} hover:shadow-lg transition-all duration-300 border rounded-2xl group`}>
                       <CardContent className="p-0">
                         <div className="flex">

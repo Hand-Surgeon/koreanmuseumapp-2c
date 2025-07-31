@@ -169,7 +169,7 @@ export default async function LocaleLayout({
       <body className={inter.className}>
         <SkipToContent />
         <ErrorBoundary>
-          <LanguageProvider>
+          <LanguageProvider initialLocale={locale as Locale}>
             <QueryProvider>
               <FavoritesProvider>
                 {children}

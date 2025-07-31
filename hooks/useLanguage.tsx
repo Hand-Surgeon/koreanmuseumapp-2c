@@ -22,15 +22,13 @@ export function useLanguage() {
   return context
 }
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("ko")
+export function LanguageProvider({ children, initialLocale = "ko" }: { children: React.ReactNode; initialLocale?: Language }) {
+  const [language, setLanguageState] = useState<Language>(initialLocale)
 
   useEffect(() => {
-    const savedLanguage = localStorage.getItem("museum-language") as Language
-    if (savedLanguage && translations[savedLanguage]) {
-      setLanguageState(savedLanguage)
-    }
-  }, [])
+    // Use initial locale from URL, don't override with localStorage
+    setLanguageState(initialLocale)
+  }, [initialLocale])
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang)
