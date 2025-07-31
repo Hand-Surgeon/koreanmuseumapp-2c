@@ -59,10 +59,13 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  // Allow Replit preview domains
   allowedDevOrigins: [
     '*.replit.dev',
     '*.repl.co',
-    'localhost:3000'
+    '*.replit.app',
+    'localhost:3000',
+    '127.0.0.1:3000',
   ],
   images: {
     remotePatterns: [
