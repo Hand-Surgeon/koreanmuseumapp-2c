@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { i18n } from './i18n.config'
+import type { Locale } from './i18n.config'
 
 const PUBLIC_FILE = /\.(.*)$/
 
@@ -31,11 +32,15 @@ export function middleware(request: NextRequest) {
   return NextResponse.redirect(newUrl)
 }
 
-function getLocale(request: NextRequest): string {
+function getLocale(request: NextRequest): Locale {
   // 1. 쿠키에서 확인
   const localeCookie = request.cookies.get('locale')
-  if (localeCookie && i18n.locales.includes(localeCookie.value as any)) {
-    return localeCookie.value
+  if (localeCookie) {
+    const cookieValue = localeCookie.value
+    const foundLocale = i18n.locales.find((locale): locale is Locale => locale === cookieValue)
+    if (foundLocale) {
+      return foundLocale
+    }
   }
 
   // 2. Accept-Language 헤더에서 감지
@@ -51,15 +56,17 @@ function getLocale(request: NextRequest): string {
   return i18n.defaultLocale
 }
 
-function getPreferredLocale(acceptLanguageHeader: string): string | null {
+function getPreferredLocale(acceptLanguageHeader: string): Locale | null {
   // Accept-Language 헤더 파싱
   const languages = acceptLanguageHeader
     .split(',')
     .map((lang) => {
-      const [locale, q = '1'] = lang.trim().split(';q=')
+      const parts = lang.trim().split(';q=')
+      const locale = parts[0]
+      const quality = parts[1] ? parseFloat(parts[1]) : 1
       return {
         locale: locale.toLowerCase(),
-        quality: parseFloat(q),
+        quality: quality,
       }
     })
     .sort((a, b) => b.quality - a.quality)
@@ -67,14 +74,16 @@ function getPreferredLocale(acceptLanguageHeader: string): string | null {
   // 지원하는 언어 매칭
   for (const { locale } of languages) {
     // 정확한 매칭
-    if (i18n.locales.includes(locale as any)) {
-      return locale
+    const supportedLocale = i18n.locales.find((l): l is Locale => l === locale)
+    if (supportedLocale) {
+      return supportedLocale
     }
     
     // 언어 코드만 매칭 (예: en-US -> en)
     const langCode = locale.split('-')[0]
-    if (i18n.locales.includes(langCode as any)) {
-      return langCode
+    const supportedLangCode = i18n.locales.find((l): l is Locale => l === langCode)
+    if (supportedLangCode) {
+      return supportedLangCode
     }
   }
 
