@@ -22,7 +22,7 @@ interface ArtifactCardProps {
   'data-testid'?: string
 }
 
-export function ArtifactCard({ artifact, featured = false, showHall = true, basePath = "artifact", 'data-testid': dataTestId }: ArtifactCardProps) {
+export function ArtifactCard({ artifact, featured = false, showHall = true, basePath = "", 'data-testid': dataTestId }: ArtifactCardProps) {
   const { language } = useLanguage()
   const culturalPropertyType = getCulturalPropertyType(artifact.culturalProperty)
   const { prefetchOnHover } = usePrefetch()
@@ -34,7 +34,7 @@ export function ArtifactCard({ artifact, featured = false, showHall = true, base
   }
 
   return (
-    <Link href={`${basePath}/${artifact.id}`}>
+    <Link href={`${basePath ? basePath + '/' : ''}artifact/${artifact.id}`}>
       <Card 
         className={cardClassName}
         onMouseEnter={handleMouseEnter}
@@ -44,7 +44,7 @@ export function ArtifactCard({ artifact, featured = false, showHall = true, base
           <div className="relative">
             <AspectRatio ratio={ASPECT_RATIOS.card}>
               <BlurImage
-                {...getImageProps(artifact.image || '', 'main', featured ? 'detail' : 'card', true)}
+                src={artifact.image || '/placeholder.svg'}
                 alt={artifact.name[language as keyof typeof artifact.name]}
                 fill
                 className={IMAGE_STYLES.base}

@@ -35,7 +35,7 @@ export function BlurImage({
   placeholder = 'blur',
   blurDataURL,
 }: BlurImageProps) {
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false) // Changed to false to disable blur
   const [currentSrc, setCurrentSrc] = useState(src)
   
   // Generate a simple blur placeholder if none provided
@@ -77,17 +77,12 @@ export function BlurImage({
           width={width}
           height={height}
           fill={fill}
-          className={cn(
-            "transition-opacity duration-300",
-            isLoading ? "opacity-0" : "opacity-100",
-            className
-          )}
+          className={className}
           priority={priority}
           sizes={sizes}
           quality={quality}
-          onLoad={() => setIsLoading(false)}
-          onError={() => {
-            setIsLoading(false)
+          onError={(e) => {
+            console.error('Image error:', src)
             // Fallback to placeholder image on error
             if (src !== '/placeholder.svg') {
               setCurrentSrc('/placeholder.svg')
