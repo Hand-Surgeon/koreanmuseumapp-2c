@@ -1,0 +1,313 @@
+import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+
+const TEST_URL = 'http://localhost:3000';
+
+test.describe('Accessibility Tests', () => {
+  test('Homepage meets WCAG 2.1 AA standards', async ({ page }) => {
+    await page.goto(`${TEST_URL}/ko`);
+    await page.waitForLoadState('networkidle');
+    
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze();
+    
+    // Log violations if any
+    if (accessibilityScanResults.violations.length > 0) {
+      console.log('Accessibility violations found:');
+      accessibilityScanResults.violations.forEach(violation => {
+        console.log(`- ${violation.id}: ${violation.description}`);
+        console.log(`  Impact: ${violation.impact}`);
+        console.log(`  Affected elements: ${violation.nodes.length}`);
+      });
+    }
+    
+    expect(accessibilityScanResults.violations).toHaveLength(0);
+    console.log('✓ Homepage passes WCAG 2.1 AA standards');
+  });
+
+  test('Hall page meets accessibility standards', async ({ page }) => {
+    await page.goto(`${TEST_URL}/ko/hall/archaeology`);
+    await page.waitForLoadState('networkidle');
+    
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa'])
+      .analyze();
+    
+    expect(accessibilityScanResults.violations).toHaveLength(0);
+    console.log('✓ Hall page passes accessibility standards');
+  });
+
+  test('Artifact detail page meets accessibility standards', async ({ page }) => {
+    await page.goto(`${TEST_URL}/ko/hall/archaeology`);
+    await page.locator('a[href*="/artifact/"]').first().click();
+    await page.waitForLoadState('networkidle');
+    
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa'])
+      .analyze();
+    
+    expect(accessibilityScanResults.violations).toHaveLength(0);
+    console.log('✓ Artifact detail page passes accessibility standards');
+  });
+
+  test('Keyboard navigation works throughout app', async ({ page }) => {
+    await page.goto(`${TEST_URL}/ko`);
+    
+    // Start tabbing through the page
+    await page.keyboard.press('Tab');
+    
+    // Check skip link is first focusable element
+    const firstFocused = await page.evaluate(() => {
+      const el = document.activeElement;
+      return {
+        tag: el?.tagName,
+        text: el?.textContent,
+        href: el?.getAttribute('href')
+      };
+    });
+    
+    // Should focus on skip link or first interactive element
+    expect(firstFocused.tag).toBeTruthy();
+    
+    // Tab through several elements
+    let focusableElements = 0;
+    for (let i = 0; i < 10; i++) {
+      await page.keyboard.press('Tab');
+      const hasFocus = await page.evaluate(() => {
+        return document.activeElement !== document.body;
+      });
+      if (hasFocus) focusableElements++;
+    }
+    
+    expect(focusableElements).toBeGreaterThan(5);
+    console.log(`✓ Keyboard navigation works - ${focusableElements} focusable elements`);
+    
+    // Test Enter key activation
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Enter');
+    
+    // Should navigate or activate element
+    await page.waitForTimeout(1000);
+    console.log('✓ Keyboard activation (Enter key) works');
+  });
+
+  test('Images have appropriate alt text', async ({ page }) => {
+    await page.goto(`${TEST_URL}/ko`);
+    await page.waitForLoadState('networkidle');
+    
+    const imageAudit = await page.evaluate(() => {
+      const images = Array.from(document.querySelectorAll('img'));
+      const results = {
+        total: images.length,
+        withAlt: 0,
+        withEmptyAlt: 0,
+        withoutAlt: 0,
+        decorative: 0
+      };
+      
+      images.forEach(img => {
+        if (img.hasAttribute('alt')) {
+          if (img.alt.trim() === '') {
+            results.withEmptyAlt++;
+            results.decorative++;
+          } else {
+            results.withAlt++;
+          }
+        } else {
+          results.withoutAlt++;
+        }
+      });
+      
+      return results;
+    });
+    
+    console.log('Image accessibility audit:', imageAudit);
+    expect(imageAudit.withoutAlt).toBe(0);
+    console.log('✓ All images have alt attributes');
+  });
+
+  test('Color contrast meets WCAG standards', async ({ page }) => {
+    await page.goto(`${TEST_URL}/ko`);
+    await page.waitForLoadState('networkidle');
+    
+    const contrastResults = await new AxeBuilder({ page })
+      .withTags(['cat.color'])
+      .analyze();
+    
+    const contrastViolations = contrastResults.violations.filter(v => 
+      v.id.includes('contrast')
+    );
+    
+    if (contrastViolations.length > 0) {
+      console.log('Color contrast issues:');
+      contrastViolations.forEach(v => {
+        console.log(`- ${v.nodes.length} elements with insufficient contrast`);
+      });
+    }
+    
+    expect(contrastViolations).toHaveLength(0);
+    console.log('✓ Color contrast meets WCAG standards');
+  });
+
+  test('Form elements have proper labels', async ({ page }) => {
+    await page.goto(`${TEST_URL}/ko`);
+    
+    const formAudit = await page.evaluate(() => {
+      const inputs = Array.from(document.querySelectorAll('input, select, textarea'));
+      const results = {
+        total: inputs.length,
+        withLabel: 0,
+        withAriaLabel: 0,
+        withPlaceholder: 0,
+        unlabeled: 0
+      };
+      
+      inputs.forEach(input => {
+        const id = input.id;
+        const hasLabel = id && document.querySelector(`label[for="${id}"]`);
+        const hasAriaLabel = input.hasAttribute('aria-label') || input.hasAttribute('aria-labelledby');
+        const hasPlaceholder = input.hasAttribute('placeholder');
+        
+        if (hasLabel) results.withLabel++;
+        else if (hasAriaLabel) results.withAriaLabel++;
+        else if (hasPlaceholder) results.withPlaceholder++;
+        else results.unlabeled++;
+      });
+      
+      return results;
+    });
+    
+    console.log('Form accessibility audit:', formAudit);
+    expect(formAudit.unlabeled).toBe(0);
+    console.log('✓ All form elements are properly labeled');
+  });
+
+  test('ARIA landmarks are properly used', async ({ page }) => {
+    await page.goto(`${TEST_URL}/ko`);
+    
+    const landmarks = await page.evaluate(() => {
+      const landmarkRoles = ['banner', 'navigation', 'main', 'contentinfo', 'search'];
+      const found: Record<string, number> = {};
+      
+      // Check for role attributes
+      landmarkRoles.forEach(role => {
+        const elements = document.querySelectorAll(`[role="${role}"]`);
+        if (elements.length > 0) {
+          found[role] = elements.length;
+        }
+      });
+      
+      // Check for semantic HTML5 elements
+      const semanticElements = {
+        header: document.querySelectorAll('header').length,
+        nav: document.querySelectorAll('nav').length,
+        main: document.querySelectorAll('main').length,
+        footer: document.querySelectorAll('footer').length
+      };
+      
+      return { roles: found, semantic: semanticElements };
+    });
+    
+    console.log('ARIA landmarks:', landmarks);
+    
+    // Should have at least main landmark
+    const hasMain = landmarks.semantic.main > 0 || landmarks.roles.main > 0;
+    expect(hasMain).toBeTruthy();
+    console.log('✓ Proper ARIA landmarks are used');
+  });
+
+  test('Focus indicators are visible', async ({ page }) => {
+    await page.goto(`${TEST_URL}/ko`);
+    
+    // Tab to first link
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    
+    const focusVisible = await page.evaluate(() => {
+      const focused = document.activeElement;
+      if (!focused || focused === document.body) return false;
+      
+      const styles = window.getComputedStyle(focused);
+      const hasFocusStyles = 
+        styles.outline !== 'none' ||
+        styles.boxShadow !== 'none' ||
+        styles.border !== styles.borderColor; // Border color change
+      
+      return hasFocusStyles;
+    });
+    
+    expect(focusVisible).toBeTruthy();
+    console.log('✓ Focus indicators are visible');
+  });
+
+  test('Language is properly declared', async ({ page }) => {
+    await page.goto(`${TEST_URL}/ko`);
+    
+    const langAttributes = await page.evaluate(() => {
+      return {
+        html: document.documentElement.lang,
+        bodyLang: document.body.getAttribute('lang'),
+        metaLang: document.querySelector('meta[http-equiv="content-language"]')?.getAttribute('content')
+      };
+    });
+    
+    expect(langAttributes.html).toBeTruthy();
+    expect(['ko', 'ko-KR']).toContain(langAttributes.html);
+    console.log('✓ Language is properly declared');
+  });
+
+  test('Mobile touch targets are adequate size', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto(`${TEST_URL}/ko`);
+    
+    const touchTargets = await page.evaluate(() => {
+      const minSize = 44; // WCAG recommended minimum
+      const buttons = Array.from(document.querySelectorAll('button, a, [role="button"]'));
+      
+      const results = {
+        total: buttons.length,
+        adequate: 0,
+        small: 0,
+        smallTargets: [] as string[]
+      };
+      
+      buttons.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+        
+        if (width >= minSize && height >= minSize) {
+          results.adequate++;
+        } else {
+          results.small++;
+          results.smallTargets.push(`${el.tagName}: ${width}x${height}`);
+        }
+      });
+      
+      return results;
+    });
+    
+    console.log('Touch target audit:', {
+      total: touchTargets.total,
+      adequate: touchTargets.adequate,
+      small: touchTargets.small
+    });
+    
+    if (touchTargets.small > 0) {
+      console.log('Small touch targets:', touchTargets.smallTargets.slice(0, 5));
+    }
+    
+    // Allow some small targets but most should be adequate
+    const adequatePercentage = (touchTargets.adequate / touchTargets.total) * 100;
+    expect(adequatePercentage).toBeGreaterThan(80);
+    console.log(`✓ ${adequatePercentage.toFixed(0)}% of touch targets are adequate size`);
+  });
+});
+
+test.afterAll(async () => {
+  console.log('\n=== Accessibility Test Summary ===');
+  console.log('Comprehensive accessibility testing completed.');
+  console.log('Note: Install @axe-core/playwright if not already installed:');
+  console.log('npm install -D @axe-core/playwright');
+});

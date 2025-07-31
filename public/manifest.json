@@ -1,0 +1,93 @@
+{
+  "name": "국립중앙박물관 명품 100선",
+  "short_name": "박물관 100선",
+  "description": "국립중앙박물관이 소장한 대표 유물 100점을 소개합니다",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e40af",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/screenshot-1.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "label": "홈 화면"
+    },
+    {
+      "src": "/screenshots/screenshot-2.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "label": "유물 상세"
+    }
+  ],
+  "categories": ["education", "museum", "culture"],
+  "shortcuts": [
+    {
+      "name": "즐겨찾기",
+      "short_name": "즐겨찾기",
+      "description": "즐겨찾기한 유물 보기",
+      "url": "/favorites",
+      "icons": [{ "src": "/icons/favorites.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "검색",
+      "short_name": "검색",
+      "description": "유물 검색하기",
+      "url": "/?search=true",
+      "icons": [{ "src": "/icons/search.png", "sizes": "96x96" }]
+    }
+  ]
+}
