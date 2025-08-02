@@ -1,6 +1,5 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
 import { notFound } from "next/navigation"
 import { i18n, type Locale } from "@/i18n.config"
 import { LanguageProvider } from "@/hooks/useLanguage"
@@ -12,8 +11,6 @@ import { SkipToContent } from "@/components/skip-to-content"
 import { FavoritesProvider } from "@/contexts/favorites-context"
 import { QueryProvider } from "@/components/providers/query-provider"
 import "@/app/globals.css"
-
-const inter = Inter({ subsets: ["latin"] })
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ locale }))
@@ -166,7 +163,7 @@ export default async function LocaleLayout({
         <StructuredData type="organization" />
         <StructuredData type="collection" />
       </head>
-      <body className={inter.className}>
+      <body className="font-sans">
         <SkipToContent />
         <ErrorBoundary>
           <LanguageProvider initialLocale={locale as Locale}>

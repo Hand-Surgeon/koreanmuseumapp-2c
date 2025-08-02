@@ -1,12 +1,9 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
 import "./globals.css"
 import { LanguageProvider } from "@/hooks/useLanguage"
 import { StructuredData } from "@/components/structured-data"
 import { ServiceWorkerRegister } from "@/components/service-worker-register"
-
-const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://museum100.kr'),
@@ -85,7 +82,7 @@ export default function RootLayout({
         <StructuredData type="organization" />
         <StructuredData type="collection" />
       </head>
-      <body className={inter.className}>
+      <body className="font-sans">
         <ServiceWorkerRegister />
         <LanguageProvider>{children}</LanguageProvider>
       </body>

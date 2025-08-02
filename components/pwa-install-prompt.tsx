@@ -141,6 +141,8 @@ export function PWAInstallPrompt() {
 export function IOSInstallGuide({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   if (!isOpen) return null
 
+  const { t } = useLanguage()
+
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <Card className="max-w-md w-full">
