@@ -137,4 +137,5 @@ export interface Translation {
   exhibitionRoom: string
   artifactNumber: string
   culturalPropertyDesignation: string
+  [key: string]: string
 }
