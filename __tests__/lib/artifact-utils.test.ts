@@ -1,4 +1,8 @@
-import { calculateHallStats, filterArtifacts } from '@/lib/artifact-utils'
+import {
+  calculateHallStats,
+  filterArtifacts,
+  getCulturalPropertyType,
+} from '@/lib/artifact-utils'
 import { Artifact } from '@/types/artifact'
 
 const mockArtifacts: Artifact[] = [
@@ -19,7 +23,7 @@ const mockArtifacts: Artifact[] = [
       th: 'โกรยอ'
     },
     category: 'ceramics',
-    hall: 'art',
+    hall: '미술관',
     description: {
       ko: '고려청자의 대표작',
       en: 'Masterpiece of Goryeo celadon',
@@ -56,7 +60,7 @@ const mockArtifacts: Artifact[] = [
       th: 'สามอาณาจักร'
     },
     category: 'sculpture',
-    hall: 'archaeology',
+    hall: '고고관',
     description: {
       ko: '삼국시대 불교 조각의 걸작',
       en: 'Masterpiece of Three Kingdoms Buddhist sculpture',
@@ -93,7 +97,7 @@ const mockArtifacts: Artifact[] = [
       th: 'โชซอน'
     },
     category: 'ceramics',
-    hall: 'art',
+    hall: '미술관',
     description: {
       ko: '조선시대 백자의 정수',
       en: 'Essence of Joseon white porcelain',
@@ -111,86 +115,109 @@ const mockArtifacts: Artifact[] = [
     image: '/test3.jpg',
     featured: false,
     exhibitionRoom: '3층',
+    culturalProperty: '보물 제1437호',
   }
 ]
 
 describe('artifact-utils', () => {
   describe('calculateHallStats', () => {
-    it('전시관별 유물 수를 계산한다', () => {
+    it('유물 수와 문화재 지정 통계를 계산한다', () => {
       const stats = calculateHallStats(mockArtifacts)
-      
-      expect(stats.art).toBe(2)
-      expect(stats.archaeology).toBe(1)
-      expect(stats.history).toBe(0)
-      expect(stats.asia).toBe(0)
-      expect(stats.donation).toBe(0)
+
+      expect(stats).toEqual({
+        total: 3,
+        nationalTreasures: 2,
+        treasures: 1,
+      })
     })
 
     it('빈 배열에 대해 0을 반환한다', () => {
       const stats = calculateHallStats([])
-      
-      expect(stats.art).toBe(0)
-      expect(stats.archaeology).toBe(0)
-      expect(stats.history).toBe(0)
-      expect(stats.asia).toBe(0)
-      expect(stats.donation).toBe(0)
+
+      expect(stats).toEqual({
+        total: 0,
+        nationalTreasures: 0,
+        treasures: 0,
+      })
+    })
+  })
+
+  describe('getCulturalPropertyType', () => {
+    it('국보와 보물을 구분한다', () => {
+      expect(getCulturalPropertyType('국보 제83호')).toBe('nationalTreasure')
+      expect(getCulturalPropertyType('보물 1437호')).toBe('treasure')
+    })
+
+    it('지정 유형이 아닌 설명은 분류하지 않는다', () => {
+      expect(getCulturalPropertyType('북한 국보급')).toBeNull()
+      expect(getCulturalPropertyType('복제품')).toBeNull()
+      expect(getCulturalPropertyType(undefined)).toBeNull()
     })
   })
 
   describe('filterArtifacts', () => {
     it('이름으로 검색한다', () => {
-      const filtered = filterArtifacts(mockArtifacts, '청자', '전체', 'ko', '전체')
-      
+      const filtered = filterArtifacts(mockArtifacts, { searchTerm: '청자', language: 'ko' })
+
       expect(filtered).toHaveLength(1)
       expect(filtered[0].id).toBe(1)
     })
 
     it('영어 이름으로 검색한다', () => {
-      const filtered = filterArtifacts(mockArtifacts, 'moon', '전체', 'en', '전체')
-      
+      const filtered = filterArtifacts(mockArtifacts, { searchTerm: 'moon', language: 'en' })
+
       expect(filtered).toHaveLength(1)
       expect(filtered[0].id).toBe(3)
     })
 
     it('설명으로 검색한다', () => {
-      const filtered = filterArtifacts(mockArtifacts, '불교', '전체', 'ko', '전체')
-      
+      const filtered = filterArtifacts(mockArtifacts, { searchTerm: '불교', language: 'ko' })
+
       expect(filtered).toHaveLength(1)
       expect(filtered[0].id).toBe(2)
     })
 
     it('카테고리로 필터링한다', () => {
-      const filtered = filterArtifacts(mockArtifacts, '', 'ceramics', 'ko', '전체')
-      
+      const filtered = filterArtifacts(mockArtifacts, { category: 'ceramics' })
+
       expect(filtered).toHaveLength(2)
       expect(filtered.map(a => a.id)).toEqual([1, 3])
     })
 
     it('시대로 필터링한다', () => {
-      const filtered = filterArtifacts(mockArtifacts, '', '전체', 'ko', '고려')
-      
+      const filtered = filterArtifacts(mockArtifacts, { period: '고려', language: 'ko' })
+
       expect(filtered).toHaveLength(1)
       expect(filtered[0].id).toBe(1)
     })
 
     it('검색어와 필터를 함께 사용한다', () => {
-      const filtered = filterArtifacts(mockArtifacts, '백자', 'ceramics', 'ko', '조선')
-      
+      const filtered = filterArtifacts(mockArtifacts, {
+        searchTerm: '백자',
+        category: 'ceramics',
+        period: '조선',
+        language: 'ko',
+      })
+
       expect(filtered).toHaveLength(1)
       expect(filtered[0].id).toBe(3)
     })
 
     it('대소문자를 구분하지 않는다', () => {
-      const filtered1 = filterArtifacts(mockArtifacts, 'MOON', '전체', 'en', '전체')
-      const filtered2 = filterArtifacts(mockArtifacts, 'moon', '전체', 'en', '전체')
-      
+      const filtered1 = filterArtifacts(mockArtifacts, { searchTerm: 'MOON', language: 'en' })
+      const filtered2 = filterArtifacts(mockArtifacts, { searchTerm: 'moon', language: 'en' })
+
       expect(filtered1).toEqual(filtered2)
     })
 
-    it('빈 검색어에 대해 빈 배열을 반환한다', () => {
-      const filtered = filterArtifacts(mockArtifacts, '', '전체', 'ko', '전체')
-      
-      expect(filtered).toEqual([])
+    it('필터 조건이 없으면 전체 유물을 반환한다', () => {
+      expect(filterArtifacts(mockArtifacts, {})).toEqual(mockArtifacts)
+    })
+
+    it('기존 위치 인자 호출도 호환한다', () => {
+      const filtered = filterArtifacts(mockArtifacts, 'moon', '전체', 'en', '전체')
+
+      expect(filtered.map((artifact) => artifact.id)).toEqual([3])
     })
   })
 })

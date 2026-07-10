@@ -1,43 +1,51 @@
 "use client"
 
-import { useEffect } from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
-import Script from 'next/script'
-import { pageview } from '@/lib/analytics'
+import { useEffect } from "react"
+import { usePathname, useSearchParams } from "next/navigation"
+import Script from "next/script"
+import { pageview } from "@/lib/analytics"
+
+const gaId = /^G-[A-Z0-9]+$/.test(process.env.NEXT_PUBLIC_GA_ID ?? "")
+  ? process.env.NEXT_PUBLIC_GA_ID
+  : undefined
+const gtmId = /^GTM-[A-Z0-9]+$/.test(process.env.NEXT_PUBLIC_GTM_ID ?? "")
+  ? process.env.NEXT_PUBLIC_GTM_ID
+  : undefined
 
 export function AnalyticsProvider() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    const url = pathname + searchParams.toString()
-    pageview(url)
+    if (!gaId) return
+
+    const query = searchParams.toString()
+    pageview(query ? `${pathname}?${query}` : pathname, gaId)
   }, [pathname, searchParams])
 
-  if (!process.env.NEXT_PUBLIC_GA_ID) {
-    return null
-  }
+  if (!gaId && !gtmId) return null
 
   return (
     <>
-      {/* Google Analytics */}
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-        strategy="afterInteractive"
-      />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
-            page_path: window.location.pathname,
-          });
-        `}
-      </Script>
+      {gaId && (
+        <>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              window.gtag = gtag;
+              gtag('js', new Date());
+              gtag('config', '${gaId}', { page_path: window.location.pathname });
+            `}
+          </Script>
+        </>
+      )}
 
-      {/* Google Tag Manager */}
-      {process.env.NEXT_PUBLIC_GTM_ID && (
+      {gtmId && (
         <>
           <Script id="google-tag-manager" strategy="afterInteractive">
             {`
@@ -45,15 +53,16 @@ export function AnalyticsProvider() {
               new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
               j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-              })(window,document,'script','dataLayer','${process.env.NEXT_PUBLIC_GTM_ID}');
+              })(window,document,'script','dataLayer','${gtmId}');
             `}
           </Script>
           <noscript>
             <iframe
-              src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_ID}`}
+              src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+              title="Google Tag Manager"
               height="0"
               width="0"
-              style={{ display: 'none', visibility: 'hidden' }}
+              style={{ display: "none", visibility: "hidden" }}
             />
           </noscript>
         </>

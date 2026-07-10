@@ -57,6 +57,9 @@ describe('validation 유틸리티', () => {
       expect(isValidId('101')).toBe(false)
       expect(isValidId('-1')).toBe(false)
       expect(isValidId('abc')).toBe(false)
+      expect(isValidId('1abc')).toBe(false)
+      expect(isValidId('1.5')).toBe(false)
+      expect(isValidId('01')).toBe(false)
       expect(isValidId('')).toBe(false)
     })
   })
@@ -109,11 +112,11 @@ describe('validation 유틸리티', () => {
 
   describe('isValidHall', () => {
     it('유효한 전시관 이름을 확인한다', () => {
-      expect(isValidHall('archaeology')).toBe(true)
-      expect(isValidHall('art')).toBe(true)
-      expect(isValidHall('history')).toBe(true)
-      expect(isValidHall('asia')).toBe(true)
-      expect(isValidHall('donation')).toBe(true)
+      expect(isValidHall('고고관')).toBe(true)
+      expect(isValidHall('미술관')).toBe(true)
+      expect(isValidHall('역사관')).toBe(true)
+      expect(isValidHall('아시아관')).toBe(true)
+      expect(isValidHall('기증관')).toBe(true)
     })
 
     it('유효하지 않은 전시관 이름을 거부한다', () => {

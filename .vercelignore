@@ -1,0 +1,6 @@
+# Exact, unreferenced copies retained in the local repository for now.
+public/artworks/* 2.jpg
+
+.next/
+coverage/
+*.log

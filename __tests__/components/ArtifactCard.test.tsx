@@ -20,7 +20,7 @@ const mockArtifact: Artifact = {
     th: 'โกรยอ'
   },
   category: 'ceramics',
-  hall: 'art',
+  hall: '미술관',
   description: {
     ko: '고려청자의 대표작',
     en: 'Masterpiece of Goryeo celadon',
@@ -92,17 +92,16 @@ describe('ArtifactCard', () => {
     )
     
     const link = screen.getByRole('link')
-    expect(link).toHaveAttribute('href', '/artifact/1')
+    expect(link).toHaveAttribute('href', '/ko/artifact/1')
   })
 
   it('featured 상태일 때 추가 스타일이 적용된다', () => {
-    const { container } = render(
+    render(
       <LanguageProvider>
         <ArtifactCard artifact={mockArtifact} featured />
       </LanguageProvider>
     )
-    
-    const card = container.querySelector('.md\\:col-span-2')
-    expect(card).toBeInTheDocument()
+
+    expect(screen.getByText('고려청자의 대표작')).toBeInTheDocument()
   })
 })

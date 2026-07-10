@@ -1,16 +1,20 @@
 /** @type {import('next').NextConfig} */
 
+const isDevelopment = process.env.NODE_ENV !== 'production'
+
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' *.google-analytics.com *.googletagmanager.com;
+  script-src 'self' 'unsafe-inline' ${isDevelopment ? "'unsafe-eval'" : ''} https://www.google-analytics.com https://www.googletagmanager.com;
   style-src 'self' 'unsafe-inline';
-  img-src 'self' blob: data: https: *.placeholder.com;
+  img-src 'self' blob: data: https:;
   font-src 'self';
+  connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com;
+  frame-src https://www.googletagmanager.com;
   object-src 'none';
   base-uri 'self';
   form-action 'self';
   frame-ancestors 'none';
-  upgrade-insecure-requests;
+  ${isDevelopment ? '' : 'upgrade-insecure-requests;'}
 `
 
 const securityHeaders = [
@@ -24,7 +28,7 @@ const securityHeaders = [
   },
   {
     key: 'X-Frame-Options',
-    value: 'SAMEORIGIN'
+    value: 'DENY'
   },
   {
     key: 'X-Content-Type-Options',
@@ -32,7 +36,7 @@ const securityHeaders = [
   },
   {
     key: 'Referrer-Policy',
-    value: 'origin-when-cross-origin'
+    value: 'strict-origin-when-cross-origin'
   },
   {
     key: 'Permissions-Policy',
@@ -51,17 +55,7 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
-  allowedDevOrigins: [
-    '6ae6def3-0c25-4445-bd8b-e2025f548b35-00-2misp18itvbe8.pike.replit.dev',
-    'localhost:3000'
-  ],
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'via.placeholder.com',
-      },
-    ],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],

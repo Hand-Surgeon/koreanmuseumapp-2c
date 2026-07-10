@@ -1,7 +1,15 @@
+import { isHallName } from '@/types/hall'
+import { isSupportedLanguage } from '@/types/language'
+
 // 검색어 sanitization
 export function sanitizeSearchInput(input: string): string {
-  // HTML 태그 제거
-  const withoutTags = input.replace(/<[^>]*>/g, '')
+  // Script/style blocks must be removed with their contents before stripping
+  // ordinary markup. React escapes search text, but this keeps query logging and
+  // future API adapters free of executable-looking input.
+  const withoutExecutableBlocks = input
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '')
+  const withoutTags = withoutExecutableBlocks.replace(/<[^>]*>/g, '')
   
   // 특수 문자 이스케이프
   const escaped = withoutTags
@@ -15,14 +23,15 @@ export function sanitizeSearchInput(input: string): string {
 
 // 언어 코드 검증
 export function isValidLanguage(lang: string): boolean {
-  const validLanguages = ['ko', 'en', 'zh', 'ja', 'th']
-  return validLanguages.includes(lang)
+  return isSupportedLanguage(lang)
 }
 
 // ID 검증
 export function isValidId(id: string): boolean {
-  const numId = parseInt(id, 10)
-  return !isNaN(numId) && numId > 0 && numId <= 100
+  if (!/^[1-9]\d*$/.test(id)) return false
+
+  const numId = Number(id)
+  return Number.isSafeInteger(numId) && numId <= 100
 }
 
 // URL 파라미터 검증
@@ -45,8 +54,7 @@ export function validateUrlParams(params: Record<string, string>) {
 
 // 전시관 이름 검증
 export function isValidHall(hall: string): boolean {
-  const validHalls = ['archaeology', 'art', 'history', 'asia', 'donation']
-  return validHalls.includes(hall)
+  return isHallName(hall)
 }
 
 // 환경 변수 검증
@@ -55,9 +63,7 @@ export function validateEnvVars() {
     'NEXT_PUBLIC_APP_URL',
   ]
   
-  const missing = required.filter(
-    (key) => !process.env[key] && !process.env[`NEXT_PUBLIC_${key}`]
-  )
+  const missing = required.filter((key) => !process.env[key])
   
   if (missing.length > 0) {
     console.warn(`⚠️ 누락된 환경 변수: ${missing.join(', ')}`)

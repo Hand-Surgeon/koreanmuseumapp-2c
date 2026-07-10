@@ -2,14 +2,14 @@
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Building } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { Artifact } from "@/types/artifact"
+import type { Artifact } from "@/types/artifact"
 import { useLanguage } from "@/hooks/useLanguage"
 import { getCulturalPropertyType } from "@/lib/artifact-utils"
-import { CARD_STYLES, IMAGE_STYLES, ASPECT_RATIOS } from "@/lib/constants"
+import { getHallConfig } from "@/lib/hall-config"
+import { CARD_STYLES, IMAGE_STYLES } from "@/lib/constants"
 import { CulturalPropertyBadge } from "./cultural-property-badge"
 
 interface ArtifactCardProps {
@@ -19,17 +19,18 @@ interface ArtifactCardProps {
 }
 
 export function ArtifactCard({ artifact, featured = false, showHall = true }: ArtifactCardProps) {
-  const { language } = useLanguage()
+  const { language, t } = useLanguage()
   const culturalPropertyType = getCulturalPropertyType(artifact.culturalProperty)
+  const hallLabel = t[getHallConfig(artifact.hall).translatedName]
 
   const cardClassName = `${CARD_STYLES.base} ${featured ? CARD_STYLES.featured : CARD_STYLES.regular}`
 
   return (
-    <Link href={`/artifact/${artifact.id}`}>
+    <Link href={`/${language}/artifact/${artifact.id}`}>
       <Card className={cardClassName}>
         <CardContent className="p-0">
           <div className="relative">
-            <AspectRatio ratio={ASPECT_RATIOS.card}>
+            <div className="relative aspect-[4/3]">
               <Image
                 src={artifact.image || "/placeholder.svg?height=300&width=400&text=Museum+Artifact"}
                 alt={artifact.name[language]}
@@ -38,10 +39,13 @@ export function ArtifactCard({ artifact, featured = false, showHall = true }: Ar
                 sizes={featured ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 50vw, 33vw"}
                 priority={featured}
               />
-            </AspectRatio>
+            </div>
             {culturalPropertyType && (
-              <div className="absolute top-2 right-2">
-                <CulturalPropertyBadge type={culturalPropertyType} designation={artifact.culturalProperty} />
+              <div className="absolute end-2 top-2">
+                <CulturalPropertyBadge
+                  type={culturalPropertyType}
+                  designation={language === "ko" ? artifact.culturalProperty : undefined}
+                />
               </div>
             )}
           </div>
@@ -59,12 +63,12 @@ export function ArtifactCard({ artifact, featured = false, showHall = true }: Ar
             )}
             <div className="flex items-center justify-between">
               <Badge variant="secondary" className="rounded-full text-xs">
-                {artifact.category}
+                {String(t[artifact.category as keyof typeof t] ?? artifact.category)}
               </Badge>
               {showHall && (
                 <div className="flex items-center gap-1 text-xs text-gray-500">
-                  <Building className="w-3 h-3" />
-                  {artifact.hall}
+                  <Building aria-hidden="true" className="h-3 w-3" />
+                  {hallLabel}
                 </div>
               )}
             </div>

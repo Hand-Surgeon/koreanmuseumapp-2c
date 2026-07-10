@@ -30,41 +30,44 @@ describe('useLanguage', () => {
   })
 
   it('언어 변경 시 localStorage에 저장된다', () => {
+    const setItemSpy = jest.spyOn(Storage.prototype, 'setItem')
     const { result } = renderHook(() => useLanguage(), { wrapper })
     
     act(() => {
       result.current.setLanguage('ja')
     })
     
-    expect(localStorage.setItem).toHaveBeenCalledWith('museum-language', 'ja')
+    expect(setItemSpy).toHaveBeenCalledWith('museum-language', 'ja')
   })
 
   it('올바른 번역을 반환한다', () => {
     const { result } = renderHook(() => useLanguage(), { wrapper })
-    
-    expect(result.current.t.museumName).toBe('국립중앙박물관')
+
+    expect(result.current.t.nationalMuseum).toBe('국립중앙박물관')
     
     act(() => {
       result.current.setLanguage('en')
     })
     
-    expect(result.current.t.museumName).toBe('National Museum of Korea')
+    expect(result.current.t.nationalMuseum).toBe('National Museum of Korea')
   })
 
-  it('저장된 언어 설정을 불러온다', () => {
-    localStorage.getItem.mockReturnValue('zh')
-    
-    const { result } = renderHook(() => useLanguage(), { wrapper })
-    
-    // useEffect가 실행될 때까지 대기
-    expect(localStorage.getItem).toHaveBeenCalledWith('museum-language')
+  it('초기 locale을 적용한다', () => {
+    const initialLocaleWrapper = ({ children }: { children: ReactNode }) => (
+      <LanguageProvider initialLocale="zh">{children}</LanguageProvider>
+    )
+
+    const { result } = renderHook(() => useLanguage(), { wrapper: initialLocaleWrapper })
+
+    expect(result.current.language).toBe('zh')
+    expect(result.current.t.nationalMuseum).toBe('韩国国立中央博物馆')
   })
 
-  it('유효하지 않은 언어는 무시한다', () => {
-    localStorage.getItem.mockReturnValue('invalid')
-    
-    const { result } = renderHook(() => useLanguage(), { wrapper })
-    
-    expect(result.current.language).toBe('ko')
+  it('경로 locale을 저장소와 쿠키의 정본으로 동기화한다', () => {
+    const setItemSpy = jest.spyOn(Storage.prototype, 'setItem')
+    renderHook(() => useLanguage(), { wrapper })
+
+    expect(setItemSpy).toHaveBeenCalledWith('museum-language', 'ko')
+    expect(document.cookie).toContain('locale=ko')
   })
 })

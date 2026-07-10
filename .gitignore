@@ -112,7 +112,6 @@ pids
 
 # Gatsby files
 .cache/
-public/
 
 # Next.js
 /.next/
@@ -149,8 +148,7 @@ dist
 # Turborepo
 .turbo
 
-# PWA files
-**/public/sw.js
+# Generated Workbox files (the hand-written public/sw.js is tracked)
 **/public/workbox-*.js
 **/public/worker-*.js
 **/public/sw.js.map

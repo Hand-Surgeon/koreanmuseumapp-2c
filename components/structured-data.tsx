@@ -1,99 +1,107 @@
-import Script from 'next/script'
-import { Artifact } from '@/types/artifact'
+import { translations } from "@/data/translations"
+import type { Artifact } from "@/types/artifact"
+import type { Language } from "@/types/language"
+import { isMuseumDataVerified } from "@/lib/server/emuseum/snapshot"
 
-interface MuseumStructuredDataProps {
-  type: 'organization' | 'artifact' | 'collection'
+interface StructuredDataProps {
+  type: "website" | "artifact" | "collection"
   data?: Artifact
+  locale?: Language
 }
 
-export function StructuredData({ type, data }: MuseumStructuredDataProps) {
-  let jsonLd = {}
+function getBaseUrl() {
+  return (process.env.NEXT_PUBLIC_APP_URL || "https://museum100.kr").replace(/\/$/, "")
+}
+
+function toAbsoluteUrl(path: string) {
+  return new URL(path, `${getBaseUrl()}/`).toString()
+}
+
+export function StructuredData({ type, data, locale = "ko" }: StructuredDataProps) {
+  if (!isMuseumDataVerified()) return null
+
+  const baseUrl = getBaseUrl()
+  const t = translations[locale]
+  const collectionName = `${t.nationalMuseum} ${t.masterpieces100}`
+  let jsonLd: Record<string, unknown>
 
   switch (type) {
-    case 'organization':
+    case "website":
       jsonLd = {
         "@context": "https://schema.org",
-        "@type": "Museum",
-        "name": "국립중앙박물관",
-        "alternateName": "National Museum of Korea",
-        "url": "https://museum100.kr",
-        "logo": "https://museum100.kr/logo.png",
-        "description": "대한민국을 대표하는 박물관으로 선사시대부터 근대까지의 유물을 소장하고 있습니다.",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "137 Seobinggo-ro",
-          "addressLocality": "Yongsan-gu",
-          "addressRegion": "Seoul",
-          "postalCode": "04383",
-          "addressCountry": "KR"
+        "@type": "WebSite",
+        name: collectionName,
+        alternateName: "Museum 100",
+        url: `${baseUrl}/${locale}`,
+        image: `${baseUrl}/icons/icon-512x512.png`,
+        description: t.subtitle,
+        inLanguage: locale,
+      }
+      break
+
+    case "artifact": {
+      if (!data) return null
+
+      const primaryImage = data.images?.[0]
+
+      jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "CreativeWork",
+        name: data.name[locale],
+        alternateName: locale === "ko" ? data.name.en : data.name.ko,
+        description: data.description[locale],
+        temporalCoverage: data.period[locale],
+        material: data.material?.[locale],
+        spatialCoverage: data.location
+          ? { "@type": "Place", name: data.location[locale] }
+          : undefined,
+        identifier: data.artifactNumber,
+        isPartOf: {
+          "@type": "Collection",
+          name: collectionName,
+          url: `${baseUrl}/${locale}`,
         },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": 37.5238506,
-          "longitude": 126.9804702
-        },
-        "openingHoursSpecification": [
-          {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-            "opens": "10:00",
-            "closes": "18:00"
-          },
-          {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": ["Saturday", "Sunday"],
-            "opens": "10:00",
-            "closes": "21:00"
+        image: primaryImage
+          ? {
+            "@type": "ImageObject",
+            contentUrl: toAbsoluteUrl(primaryImage.src),
+            creditText: primaryImage.credit,
+            copyrightNotice: primaryImage.copyrightNotice,
+            license: primaryImage.rightsStatus === "kogl-1"
+              ? data.rights?.metadata.licenseUrl
+              : undefined,
+            acquireLicensePage: primaryImage.evidenceUrl,
           }
-        ]
+          : toAbsoluteUrl(data.image),
+        isBasedOn: data.source?.datasetUrl,
+        license: data.rights?.metadata.licenseUrl,
+        creditText: data.rights?.metadata.attribution,
+        url: `${baseUrl}/${locale}/artifact/${data.id}`,
+        inLanguage: locale,
       }
       break
+    }
 
-    case 'artifact':
-      if (data) {
-        jsonLd = {
-          "@context": "https://schema.org",
-          "@type": "CreativeWork",
-          "name": data.name.ko,
-          "alternateName": data.name.en,
-          "description": data.description.ko,
-          "creator": {
-            "@type": "Person",
-            "name": "Unknown"
-          },
-          "dateCreated": data.period.ko,
-          "material": data.material?.ko,
-          "locationCreated": data.excavationSite?.ko,
-          "isPartOf": {
-            "@type": "Collection",
-            "name": "국립중앙박물관 소장품"
-          },
-          "image": data.image,
-          "url": `https://museum100.kr/artifact/${data.id}`
-        }
-      }
-      break
-
-    case 'collection':
+    case "collection":
       jsonLd = {
         "@context": "https://schema.org",
         "@type": "Collection",
-        "name": "국립중앙박물관 명품 100선",
-        "description": "국립중앙박물관이 선정한 대표 유물 100점",
-        "numberOfItems": 100,
-        "isPartOf": {
-          "@type": "Museum",
-          "name": "국립중앙박물관"
-        }
+        name: collectionName,
+        description: t.essenceOfKoreanCulture,
+        numberOfItems: 100,
+        url: `${baseUrl}/${locale}`,
+        inLanguage: locale,
       }
       break
   }
 
+  const serializedJsonLd = JSON.stringify(jsonLd).replace(/</g, "\\u003c")
+
   return (
-    <Script
+    <script
       id={`structured-data-${type}`}
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: serializedJsonLd }}
     />
   )
 }

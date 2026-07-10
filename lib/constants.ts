@@ -11,13 +11,7 @@ export const IMAGE_STYLES = {
 } as const
 
 export const BADGE_STYLES = {
-  nationalTreasure: 'bg-red-500/90 text-white rounded-full backdrop-blur-sm',
-  treasure: 'bg-orange-500/90 text-white rounded-full backdrop-blur-sm',
+  nationalTreasure: 'bg-red-700 text-white rounded-full',
+  treasure: 'bg-orange-800 text-white rounded-full',
   category: 'rounded-full',
-} as const
-
-export const ASPECT_RATIOS = {
-  card: 4 / 3,
-  square: 1,
-  wide: 16 / 9,
 } as const

@@ -3,7 +3,7 @@ import '@testing-library/jest-dom'
 // Next.js Image 컴포넌트 모킹
 jest.mock('next/image', () => ({
   __esModule: true,
-  default: (props) => {
+  default: ({ fill, priority, placeholder, blurDataURL, quality, ...props }) => {
     // eslint-disable-next-line jsx-a11y/alt-text
     return <img {...props} />
   },
@@ -30,19 +30,21 @@ jest.mock('next/navigation', () => ({
 }))
 
 // window.matchMedia 모킹
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-})
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(), // deprecated
+      removeListener: jest.fn(), // deprecated
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  })
+}
 
 // IntersectionObserver 모킹
 global.IntersectionObserver = class IntersectionObserver {
@@ -62,15 +64,6 @@ global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
 }
-
-// localStorage 모킹
-const localStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
-}
-global.localStorage = localStorageMock
 
 // 환경 변수 설정
 process.env.NEXT_PUBLIC_APP_URL = 'http://localhost:3000'

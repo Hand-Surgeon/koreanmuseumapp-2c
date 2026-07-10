@@ -5,19 +5,67 @@ import { X, Download, Smartphone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { useLanguage } from '@/hooks/useLanguage'
+import type { Language } from '@/types/language'
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
 }
 
+const installCopy: Record<Language, {
+  title: string
+  description: string
+  install: string
+  later: string
+  close: string
+}> = {
+  ko: {
+    title: '앱으로 설치하기',
+    description: '홈 화면에 추가해 더 빠르고 편리하게 이용하세요.',
+    install: '설치하기',
+    later: '나중에',
+    close: '설치 안내 닫기',
+  },
+  en: {
+    title: 'Install the app',
+    description: 'Add it to your home screen for faster, easier access.',
+    install: 'Install',
+    later: 'Not now',
+    close: 'Close install prompt',
+  },
+  zh: {
+    title: '安装应用',
+    description: '添加到主屏幕，更快更方便地访问。',
+    install: '安装',
+    later: '稍后',
+    close: '关闭安装提示',
+  },
+  ja: {
+    title: 'アプリをインストール',
+    description: 'ホーム画面に追加して、より快適にご利用いただけます。',
+    install: 'インストール',
+    later: '後で',
+    close: 'インストール案内を閉じる',
+  },
+  th: {
+    title: 'ติดตั้งแอป',
+    description: 'เพิ่มลงในหน้าจอหลักเพื่อเข้าถึงได้รวดเร็วยิ่งขึ้น',
+    install: 'ติดตั้ง',
+    later: 'ไว้ภายหลัง',
+    close: 'ปิดคำแนะนำการติดตั้ง',
+  },
+}
+
 export function PWAInstallPrompt() {
-  const { t } = useLanguage()
+  const { language } = useLanguage()
+  const copy = installCopy[language]
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [showPrompt, setShowPrompt] = useState(false)
   const [isInstalled, setIsInstalled] = useState(false)
 
   useEffect(() => {
+    let showTimer: ReturnType<typeof setTimeout> | undefined
+
     // PWA 설치 상태 확인
     if (window.matchMedia('(display-mode: standalone)').matches) {
       setIsInstalled(true)
@@ -33,7 +81,7 @@ export function PWAInstallPrompt() {
       const dismissed = localStorage.getItem('pwa-install-dismissed')
       if (!dismissed) {
         // 3초 후 프롬프트 표시
-        setTimeout(() => setShowPrompt(true), 3000)
+        showTimer = setTimeout(() => setShowPrompt(true), 3000)
       }
     }
 
@@ -48,6 +96,7 @@ export function PWAInstallPrompt() {
     window.addEventListener('appinstalled', handleAppInstalled)
 
     return () => {
+      if (showTimer) clearTimeout(showTimer)
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
       window.removeEventListener('appinstalled', handleAppInstalled)
     }
@@ -60,10 +109,7 @@ export function PWAInstallPrompt() {
       await deferredPrompt.prompt()
       const { outcome } = await deferredPrompt.userChoice
       
-      if (outcome === 'accepted') {
-        console.log('PWA 설치 승인됨')
-      } else {
-        console.log('PWA 설치 거절됨')
+      if (outcome !== 'accepted') {
         localStorage.setItem('pwa-install-dismissed', 'true')
       }
       
@@ -82,22 +128,22 @@ export function PWAInstallPrompt() {
   if (!showPrompt || isInstalled) return null
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-4 md:w-96">
+    <div className="fixed inset-x-4 bottom-4 z-50 md:inset-x-auto md:end-4 md:w-96">
       <Card className="shadow-xl border-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
         <CardContent className="p-4">
           <div className="flex items-start gap-4">
             <div className="flex-shrink-0">
               <div className="bg-white/20 p-3 rounded-lg">
-                <Smartphone className="w-6 h-6" />
+                <Smartphone aria-hidden="true" className="h-6 w-6" />
               </div>
             </div>
             
             <div className="flex-1">
               <h3 className="font-semibold text-lg mb-1">
-                앱으로 설치하기
+                {copy.title}
               </h3>
               <p className="text-sm text-white/90 mb-3">
-                홈 화면에 추가하여 더 빠르고 편리하게 이용하세요
+                {copy.description}
               </p>
               
               <div className="flex gap-2">
@@ -106,8 +152,8 @@ export function PWAInstallPrompt() {
                   size="sm"
                   className="bg-white text-blue-700 hover:bg-gray-100"
                 >
-                  <Download className="w-4 h-4 mr-1" />
-                  설치하기
+                  <Download aria-hidden="true" className="me-1 h-4 w-4" />
+                  {copy.install}
                 </Button>
                 <Button
                   onClick={handleDismiss}
@@ -115,7 +161,7 @@ export function PWAInstallPrompt() {
                   variant="ghost"
                   className="text-white hover:bg-white/20"
                 >
-                  나중에
+                  {copy.later}
                 </Button>
               </div>
             </div>
@@ -123,48 +169,11 @@ export function PWAInstallPrompt() {
             <button
               onClick={handleDismiss}
               className="flex-shrink-0 text-white/80 hover:text-white"
+              aria-label={copy.close}
             >
-              <X className="w-5 h-5" />
+              <X aria-hidden="true" className="h-5 w-5" />
             </button>
           </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
-
-// iOS 설치 가이드 모달
-export function IOSInstallGuide({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  if (!isOpen) return null
-
-  return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <Card className="max-w-md w-full">
-        <CardContent className="p-6">
-          <h3 className="text-lg font-semibold mb-4">iOS에서 앱 설치하기</h3>
-          
-          <ol className="space-y-3 text-sm">
-            <li className="flex gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-semibold">1</span>
-              <span>Safari 브라우저에서 이 페이지를 여세요</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-semibold">2</span>
-              <span>하단의 공유 버튼을 탭하세요</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-semibold">3</span>
-              <span>"홈 화면에 추가"를 선택하세요</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-semibold">4</span>
-              <span>"추가"를 탭하여 설치를 완료하세요</span>
-            </li>
-          </ol>
-          
-          <Button onClick={onClose} className="w-full mt-6">
-            확인
-          </Button>
         </CardContent>
       </Card>
     </div>

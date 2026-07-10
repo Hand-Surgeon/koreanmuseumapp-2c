@@ -29,7 +29,7 @@ export function CulturalPropertyBadge({
 
   return (
     <Badge className={`${badgeStyle} ${textSize}`}>
-      {showIcon && <Award className={`${iconSize} mr-1`} />}
+      {showIcon && <Award aria-hidden="true" className={`${iconSize} me-1`} />}
       {designation || (type === 'nationalTreasure' ? t.nationalTreasure : t.treasure)}
     </Badge>
   )

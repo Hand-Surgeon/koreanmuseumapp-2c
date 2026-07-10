@@ -1,10 +1,14 @@
 import { MetadataRoute } from 'next'
-import { artifacts } from '@/data/artifacts'
+import { listArtifacts } from '@/lib/server/artifact-repository'
 import { hallConfigs } from '@/lib/hall-config'
 import { i18n } from '@/i18n.config'
+import { isMuseumDataVerified } from '@/lib/server/emuseum/snapshot'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://museum100.kr'
+  if (!isMuseumDataVerified()) return []
+
+  const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://museum100.kr').replace(/\/$/, '')
+  const artifacts = listArtifacts()
   const urls: MetadataRoute.Sitemap = []
 
   // 각 언어별 URL 생성
@@ -24,14 +28,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // 전시관 페이지들
     Object.keys(hallConfigs).forEach((hall) => {
+      const encodedHall = encodeURIComponent(hall)
       urls.push({
-        url: `${baseUrl}/${locale}/hall/${hall}`,
+        url: `${baseUrl}/${locale}/hall/${encodedHall}`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
         priority: 0.8,
         alternates: {
           languages: Object.fromEntries(
-            i18n.locales.map((l) => [l, `${baseUrl}/${l}/hall/${hall}`])
+            i18n.locales.map((l) => [l, `${baseUrl}/${l}/hall/${encodedHall}`])
           ),
         },
       })

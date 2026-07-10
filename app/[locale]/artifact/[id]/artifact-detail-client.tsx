@@ -1,225 +1,303 @@
 "use client"
 
-import { ArrowLeft, Share, Heart, Clock, MapPin, Award, Building, ZoomIn } from "lucide-react"
+import { AlertTriangle, ArrowLeft, Award, Building, ExternalLink, Hash, MapPin, Ruler, ShieldCheck } from "lucide-react"
+import Link from "next/link"
+import { AccessibleImageGallery } from "@/components/accessible-image-gallery"
+import { ArtifactCard } from "@/components/artifact-card"
+import { CulturalPropertyBadge } from "@/components/cultural-property-badge"
+import { FavoriteButton } from "@/components/favorite-button"
+import { ShareButton } from "@/components/share-button"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { AspectRatio } from "@/components/ui/aspect-ratio"
-import Link from "next/link"
-import Image from "next/image"
-import { useState } from "react"
 import { useLanguage } from "@/hooks/useLanguage"
-import { Artifact } from "@/types/artifact"
-import { hallConfigs } from "@/lib/hall-config"
-import { CulturalPropertyBadge } from "@/components/cultural-property-badge"
-import { ArtifactCard } from "@/components/artifact-card"
+import { getCulturalPropertyType } from "@/lib/artifact-utils"
+import { getHallConfig } from "@/lib/hall-config"
+import type { Artifact } from "@/types/artifact"
+import type { Language } from "@/types/language"
 
 interface ArtifactDetailClientProps {
   artifact: Artifact
   relatedArtifacts: Artifact[]
 }
 
+interface RightsCopy {
+  sourceAndRights: string
+  imageCredit: string
+  source: string
+  metadataLicense: string
+  viewEvidence: string
+  thirdPartyNotice: string
+  rightsPending: string
+  independentNotice: string
+}
+
+const rightsCopy: Record<Language, RightsCopy> = {
+  ko: {
+    sourceAndRights: "출처 및 이용조건",
+    imageCredit: "이미지 출처",
+    source: "자료 출처",
+    metadataLicense: "메타데이터 이용조건",
+    viewEvidence: "근거 확인",
+    thirdPartyNotice: "이미지 권리는 메타데이터와 별도로 검토되었습니다.",
+    rightsPending: "출처와 이미지 권리를 확인 중입니다. 재사용하지 마세요.",
+    independentNotice: "공공데이터를 바탕으로 작성한 안내 페이지입니다. 최종 정보는 연결된 원 출처를 확인하세요.",
+  },
+  en: {
+    sourceAndRights: "Source and usage rights",
+    imageCredit: "Image credit",
+    source: "Data source",
+    metadataLicense: "Metadata license",
+    viewEvidence: "View evidence",
+    thirdPartyNotice: "Image rights were reviewed separately from metadata rights.",
+    rightsPending: "Source and image rights are still under review. Do not reuse this image.",
+    independentNotice: "This guide uses public data. Consult the linked source for authoritative information.",
+  },
+  zh: {
+    sourceAndRights: "来源与使用条件",
+    imageCredit: "图片来源",
+    source: "资料来源",
+    metadataLicense: "元数据许可",
+    viewEvidence: "查看依据",
+    thirdPartyNotice: "图片权利与元数据权利分别审核。",
+    rightsPending: "来源及图片权利仍在审核中，请勿再利用。",
+    independentNotice: "本页面依据公共数据制作，权威信息请以所链接的原始来源为准。",
+  },
+  ja: {
+    sourceAndRights: "出典と利用条件",
+    imageCredit: "画像クレジット",
+    source: "データ出典",
+    metadataLicense: "メタデータの利用条件",
+    viewEvidence: "根拠を確認",
+    thirdPartyNotice: "画像の権利はメタデータとは別に確認されています。",
+    rightsPending: "出典と画像の権利を確認中です。再利用しないでください。",
+    independentNotice: "この案内ページは公共データに基づいています。確定情報はリンク先の原出典をご確認ください。",
+  },
+  th: {
+    sourceAndRights: "แหล่งที่มาและเงื่อนไขการใช้",
+    imageCredit: "เครดิตภาพ",
+    source: "แหล่งข้อมูล",
+    metadataLicense: "สิทธิ์การใช้ข้อมูลเมตา",
+    viewEvidence: "ดูหลักฐาน",
+    thirdPartyNotice: "สิทธิ์ของภาพได้รับการตรวจสอบแยกจากสิทธิ์ของข้อมูลเมตา",
+    rightsPending: "กำลังตรวจสอบแหล่งที่มาและสิทธิ์ของภาพ โปรดอย่านำภาพไปใช้ซ้ำ",
+    independentNotice: "หน้าคำแนะนำนี้จัดทำจากข้อมูลสาธารณะ โปรดตรวจสอบข้อมูลที่เป็นทางการจากแหล่งที่มาที่เชื่อมโยงไว้",
+  },
+}
+
 export default function ArtifactDetailClient({ artifact, relatedArtifacts }: ArtifactDetailClientProps) {
   const { t, language } = useLanguage()
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [isLiked, setIsLiked] = useState(false)
-  const [isImageExpanded, setIsImageExpanded] = useState(false)
-
-  const images = [
-    artifact.image,
-    artifact.image.replace("&text=", "&text=측면+"),
-    artifact.image.replace("&text=", "&text=세부+"),
-  ]
-
-  const hallConfig = hallConfigs[artifact.hall as keyof typeof hallConfigs]
+  const hallConfig = getHallConfig(artifact.hall)
+  const culturalPropertyType = getCulturalPropertyType(artifact.culturalProperty)
+  const categoryLabel = t[artifact.category as keyof typeof t] ?? artifact.category
+  const copy = rightsCopy[language]
+  const galleryImages = artifact.images?.map((image) => image.src) ?? [artifact.image]
+  const primaryImage = artifact.images?.[0]
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                {t.backToHome}
-              </Button>
+      <header className="sticky top-0 z-40 border-b bg-white/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+          <Button asChild variant="ghost" size="sm">
+            <Link href={`/${language}`}>
+              <ArrowLeft className="me-2 h-4 w-4" aria-hidden="true" />
+              {t.backToHome}
             </Link>
-            <div className="flex gap-2">
-              <Button variant="outline" size="icon">
-                <Share className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setIsLiked(!isLiked)}
-                className={isLiked ? "text-red-500" : ""}
-              >
-                <Heart className={`h-4 w-4 ${isLiked ? "fill-current" : ""}`} />
-              </Button>
-            </div>
+          </Button>
+          <div className="flex items-center gap-2">
+            <ShareButton artifact={artifact} variant="outline" />
+            <FavoriteButton artifactId={artifact.id} variant="outline" />
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* 이미지 섹션 */}
-          <div>
-            <Card className="overflow-hidden">
-              <CardContent className="p-0">
-                <div className="relative">
-                  <AspectRatio ratio={1} className="bg-gray-100">
-                    <Image
-                      src={images[currentImageIndex]}
-                      alt={artifact.name[language]}
-                      fill
-                      className="object-contain cursor-zoom-in"
-                      onClick={() => setIsImageExpanded(true)}
-                      priority
-                    />
-                  </AspectRatio>
-                  <Button
-                    size="icon"
-                    variant="secondary"
-                    className="absolute bottom-4 right-4"
-                    onClick={() => setIsImageExpanded(true)}
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+          <figure>
+            <AccessibleImageGallery
+              images={galleryImages}
+              alt={artifact.name[language]}
+              name={artifact.name[language]}
+            />
+            <figcaption className={`mt-3 rounded-md border px-3 py-2 text-sm ${
+              primaryImage ? "border-gray-200 bg-white text-gray-700" : "border-amber-300 bg-amber-50 text-amber-900"
+            }`}>
+              {primaryImage ? (
+                <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <ShieldCheck className="h-4 w-4" aria-hidden="true" />
+                  <span>{copy.imageCredit}: {primaryImage.credit}</span>
+                  <a
+                    href={primaryImage.evidenceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 underline underline-offset-2"
                   >
-                    <ZoomIn className="h-4 w-4" />
-                  </Button>
-                </div>
-                {images.length > 1 && (
-                  <div className="flex gap-2 p-4 overflow-x-auto">
-                    {images.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setCurrentImageIndex(index)}
-                        className={`relative w-20 h-20 rounded-md overflow-hidden border-2 transition-colors ${
-                          currentImageIndex === index ? "border-primary" : "border-transparent"
-                        }`}
-                      >
-                        <Image
-                          src={images[index]}
-                          alt=""
-                          fill
-                          className="object-cover"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+                    {copy.viewEvidence}
+                    <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                  </a>
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  {copy.rightsPending}
+                </span>
+              )}
+            </figcaption>
+          </figure>
 
-          {/* 정보 섹션 */}
           <div className="space-y-6">
-            <div>
-              <div className="flex items-start justify-between mb-2">
-                <h1 className="text-3xl font-bold text-gray-900">{artifact.name[language]}</h1>
-                {artifact.culturalProperty && (
+            <section aria-labelledby="artifact-title">
+              <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <h1 id="artifact-title" className="text-3xl font-bold text-gray-900">
+                    {artifact.name[language]}
+                  </h1>
+                  <p className="mt-2 text-lg text-gray-600">{artifact.period[language]}</p>
+                </div>
+                {culturalPropertyType && (
                   <CulturalPropertyBadge
-                    type={artifact.culturalProperty.type}
-                    number={artifact.culturalProperty.number}
+                    type={culturalPropertyType}
+                    designation={language === "ko" ? artifact.culturalProperty : undefined}
+                    size="md"
                   />
                 )}
               </div>
-              <p className="text-lg text-gray-600 mb-4">{artifact.period[language]}</p>
-              <p className="text-gray-700 leading-relaxed">{artifact.description[language]}</p>
-            </div>
+              <p className="leading-7 text-gray-700">{artifact.description[language]}</p>
+            </section>
 
             <Card>
               <CardContent className="p-6">
-                <h2 className="text-lg font-semibold mb-4">{t.details}</h2>
-                <dl className="grid grid-cols-1 gap-4">
+                <h2 className="mb-4 text-lg font-semibold">{t.details}</h2>
+                <dl className="space-y-4">
                   {artifact.material && (
-                    <div className="flex items-center gap-3">
-                      <dt className="text-gray-500 flex items-center gap-2">
-                        <Award className="h-4 w-4" />
-                        {t.material}:
-                      </dt>
-                      <dd className="text-gray-900">{artifact.material[language]}</dd>
-                    </div>
+                    <DetailRow icon={Award} label={t.material} value={artifact.material[language]} />
                   )}
-                  {artifact.size && (
-                    <div className="flex items-center gap-3">
-                      <dt className="text-gray-500 flex items-center gap-2">
-                        <MapPin className="h-4 w-4" />
-                        {t.size}:
-                      </dt>
-                      <dd className="text-gray-900">{artifact.size[language]}</dd>
-                    </div>
+                  {artifact.dimensions && (
+                    <DetailRow icon={Ruler} label={t.dimensions} value={artifact.dimensions} />
                   )}
-                  {artifact.excavationSite && (
-                    <div className="flex items-center gap-3">
-                      <dt className="text-gray-500 flex items-center gap-2">
-                        <MapPin className="h-4 w-4" />
-                        {t.excavationSite}:
-                      </dt>
-                      <dd className="text-gray-900">{artifact.excavationSite[language]}</dd>
-                    </div>
+                  {artifact.location && (
+                    <DetailRow icon={MapPin} label={t.location} value={artifact.location[language]} />
                   )}
-                  <div className="flex items-center gap-3">
-                    <dt className="text-gray-500 flex items-center gap-2">
-                      <Building className="h-4 w-4" />
-                      {t.hall}:
+                  {language === "ko" && (
+                    <DetailRow icon={Building} label={t.exhibitionRoom} value={artifact.exhibitionRoom} />
+                  )}
+                  {artifact.artifactNumber && (
+                    <DetailRow icon={Hash} label={t.artifactNumber} value={artifact.artifactNumber} />
+                  )}
+                  <div className="flex items-start gap-3">
+                    <dt className="flex min-w-24 items-center gap-2 text-gray-500">
+                      <Building className="h-4 w-4" aria-hidden="true" />
+                      {t.hall}
                     </dt>
                     <dd>
-                      <Badge variant="outline" className="gap-1">
-                        <span className="text-lg">{hallConfig.icon}</span>
-                        {hallConfig.name[language]}
+                      <Badge variant="outline" className="gap-2">
+                        <span aria-hidden="true">{hallConfig.icon}</span>
+                        {t[hallConfig.translatedName]}
                       </Badge>
                     </dd>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <dt className="min-w-24 text-gray-500">{t.category}</dt>
+                    <dd className="text-gray-900">{String(categoryLabel)}</dd>
                   </div>
                 </dl>
               </CardContent>
             </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <h2 className="mb-3 text-lg font-semibold">{t.detailedInfo}</h2>
+                <p className="whitespace-pre-line leading-7 text-gray-700">
+                  {artifact.detailedInfo[language]}
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card id="source-rights">
+              <CardContent className="p-6">
+                <h2 className="mb-3 text-lg font-semibold">{copy.sourceAndRights}</h2>
+                {artifact.source && artifact.rights ? (
+                  <dl className="space-y-3 text-sm">
+                    <div>
+                      <dt className="font-medium text-gray-700">{copy.source}</dt>
+                      <dd className="mt-1 text-gray-600">
+                        {artifact.source.museumName} · {artifact.source.datasetName}
+                        <a
+                          href={artifact.source.datasetUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="ms-2 inline-flex items-center gap-1 underline underline-offset-2"
+                        >
+                          {copy.viewEvidence}
+                          <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                        </a>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium text-gray-700">{copy.metadataLicense}</dt>
+                      <dd className="mt-1 text-gray-600">
+                        {artifact.rights.metadata.attribution}
+                        <a
+                          href={artifact.rights.metadata.licenseUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="ms-2 inline-flex items-center gap-1 underline underline-offset-2"
+                        >
+                          {copy.viewEvidence}
+                          <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                        </a>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="sr-only">{copy.imageCredit}</dt>
+                      <dd className="text-gray-600">{copy.thirdPartyNotice}</dd>
+                    </div>
+                  </dl>
+                ) : (
+                  <p className="flex items-start gap-2 text-sm text-amber-900">
+                    <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                    {copy.rightsPending}
+                  </p>
+                )}
+                <p className="mt-4 border-t pt-3 text-xs leading-5 text-gray-500">
+                  {copy.independentNotice}
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
-        {/* 관련 유물 */}
         {relatedArtifacts.length > 0 && (
-          <div className="mt-12">
-            <h2 className="text-2xl font-bold mb-6">{t.relatedArtifacts}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <section className="mt-12" aria-labelledby="related-artifacts-title">
+            <h2 id="related-artifacts-title" className="mb-6 text-2xl font-bold">
+              {t.relatedArtifacts}
+            </h2>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {relatedArtifacts.map((relatedArtifact) => (
                 <ArtifactCard key={relatedArtifact.id} artifact={relatedArtifact} />
               ))}
             </div>
-          </div>
+          </section>
         )}
       </main>
+    </div>
+  )
+}
 
-      {/* 이미지 확대 모달 */}
-      {isImageExpanded && (
-        <div
-          className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center"
-          onClick={() => setIsImageExpanded(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-label={t.imageExpand}
-        >
-          <div className="relative w-full h-full flex items-center justify-center p-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute top-4 right-4 text-white hover:bg-white/20"
-              onClick={() => setIsImageExpanded(false)}
-            >
-              <span className="text-2xl">&times;</span>
-            </Button>
-            <div className="relative max-w-6xl max-h-full">
-              <Image
-                src={images[currentImageIndex]}
-                alt={artifact.name[language]}
-                width={1200}
-                height={1200}
-                className="object-contain max-h-screen"
-                onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-          </div>
-        </div>
-      )}
+interface DetailRowProps {
+  icon: typeof Award
+  label: string
+  value: string
+}
+
+function DetailRow({ icon: Icon, label, value }: DetailRowProps) {
+  return (
+    <div className="flex items-start gap-3">
+      <dt className="flex min-w-24 items-center gap-2 text-gray-500">
+        <Icon className="h-4 w-4" aria-hidden="true" />
+        {label}
+      </dt>
+      <dd className="text-gray-900">{value}</dd>
     </div>
   )
 }

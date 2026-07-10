@@ -1392,9 +1392,9 @@ export const artifacts: Artifact[] = [
       th: "ที่มาไม่ทราบ",
     },
   },
-  // 역사관 (70)
+  // 역사관 (28)
   {
-    id: 70,
+    id: 28,
     name: {
       ko: "무구정광대다라니경",
       en: "Mugujeonggwang Great Dharani Sutra",
@@ -1445,9 +1445,9 @@ export const artifacts: Artifact[] = [
       th: "เจดีย์เซกกาทับ วัดพุลกุกซา คยองจู",
     },
   },
-  // 아시아관 (89)
+  // 아시아관 (29)
   {
-    id: 89,
+    id: 29,
     name: {
       ko: "신안해저 청자",
       en: "Celadon from Sinan Shipwreck",
@@ -1497,9 +1497,9 @@ export const artifacts: Artifact[] = [
       th: "น่านน้ำนอกชายฝั่งซินอัน",
     },
   },
-  // 기증관 (90)
+  // 기증관 (30)
   {
-    id: 90,
+    id: 30,
     name: {
       ko: "간송 전형필 기증품",
       en: "Donation from Gansong Jeon Hyeong-pil",
@@ -1724,7 +1724,7 @@ export const artifacts: Artifact[] = [
       ja: "伽耶",
       th: "คายา",
     },
-    category: "weapon",
+    category: "weapons",
     description: {
       ko: "가야의 우수한 철기 제작 기술을 보여주는 판갑 형태의 철제 갑옷입니다.",
       en: "Iron armor in plate form showing Gaya's excellent iron-making technology.",
@@ -2189,7 +2189,7 @@ export const artifacts: Artifact[] = [
       ja: "新羅",
       th: "ชิลลา",
     },
-    category: "weapon",
+    category: "weapons",
     description: {
       ko: "금관총에서 출토된 화려한 장식의 황금 보검입니다.",
       en: "A golden treasure sword with splendid decorations excavated from Geumgwanchong.",
@@ -2392,7 +2392,7 @@ export const artifacts: Artifact[] = [
       ja: "高麗",
       th: "โครยอ",
     },
-    category: "metalwork",
+    category: "metalcraft",
     description: {
       ko: "표면에 당초문양을 정교하게 새긴 은제 도금 주전자입니다.",
       en: "A silver-gilt ewer with intricately engraved arabesque patterns on the surface.",
@@ -2535,7 +2535,7 @@ export const artifacts: Artifact[] = [
       ja: "高麗",
       th: "โครยอ",
     },
-    category: "metalwork",
+    category: "metalcraft",
     description: {
       ko: "은입사 기법으로 포도덩굴 문양을 장식한 청동합입니다.",
       en: "A bronze box decorated with grapevine patterns using silver inlay technique.",
@@ -3428,7 +3428,7 @@ export const artifacts: Artifact[] = [
       ja: "新羅",
       th: "ชิลลา",
     },
-    category: "stone",
+    category: "stonework",
     description: {
       ko: "불교 공인을 위해 순교한 이차돈을 기리는 비석입니다.",
       en: "A stele commemorating Ichadon who was martyred for the official recognition of Buddhism.",
@@ -3664,7 +3664,7 @@ export const artifacts: Artifact[] = [
       ja: "百済",
       th: "แพกเจ",
     },
-    category: "stone",
+    category: "stonework",
     description: {
       ko: "무령왕과 왕비의 신원을 밝혀준 지석",
       en: "Stone tablet revealing identities of King Muryeong and Queen",
@@ -3710,7 +3710,7 @@ export const artifacts: Artifact[] = [
       ja: "新羅",
       th: "ชิลลา",
     },
-    category: "buddhist",
+    category: "buddhistArt",
     description: {
       ko: "황룡사 목탑에서 출토된 사리장엄구",
       en: "Sarira reliquary excavated from Hwangnyongsa wooden pagoda",
@@ -3848,7 +3848,7 @@ export const artifacts: Artifact[] = [
       ja: "高麗時代",
       th: "สมัยโครยอ",
     },
-    category: "metal",
+    category: "metalcraft",
     description: {
       ko: "정교한 문양이 새겨진 은제 주전자",
       en: "Silver ewer with elaborate patterns",
@@ -3894,7 +3894,7 @@ export const artifacts: Artifact[] = [
       ja: "百済",
       th: "แพกเจ",
     },
-    category: "metal",
+    category: "metalcraft",
     description: {
       ko: "백제의 정신세계를 보여주는 향로",
       en: "Incense burner showing Baekje's spiritual world",
@@ -3986,7 +3986,7 @@ export const artifacts: Artifact[] = [
       ja: "伽耶",
       th: "คายา",
     },
-    category: "metal",
+    category: "metalcraft",
     description: {
       ko: "가야 왕족의 권위를 상징하는 금관",
       en: "Gold crown symbolizing Gaya royal authority",
@@ -4032,7 +4032,7 @@ export const artifacts: Artifact[] = [
       ja: "統一新羅",
       th: "ชิลลาร่วม",
     },
-    category: "stone",
+    category: "stonework",
     description: {
       ko: "능묘를 지키는 십이지신 석조상",
       en: "Stone statues of twelve zodiac guardians protecting tombs",
@@ -4170,7 +4170,7 @@ export const artifacts: Artifact[] = [
       ja: "百済",
       th: "แพกเจ",
     },
-    category: "metal",
+    category: "metalcraft",
     description: {
       ko: "백제 금동대향로의 정밀 복제품",
       en: "Precise replica of Baekje gilt-bronze incense burner",
@@ -4216,7 +4216,7 @@ export const artifacts: Artifact[] = [
       ja: "新羅",
       th: "ชิลลา",
     },
-    category: "metal",
+    category: "metalcraft",
     description: {
       ko: "황남대총에서 출토된 화려한 금목걸이",
       en: "Splendid gold necklace excavated from Hwangnamdaechong",
@@ -4354,7 +4354,7 @@ export const artifacts: Artifact[] = [
       ja: "伽耶",
       th: "คายา",
     },
-    category: "metal",
+    category: "metalcraft",
     description: {
       ko: "대가야 왕릉에서 출토된 금동관",
       en: "Gilt-bronze crown excavated from Daegaya royal tomb",
@@ -4400,7 +4400,7 @@ export const artifacts: Artifact[] = [
       ja: "高麗時代",
       th: "สมัยโครยอ",
     },
-    category: "metal",
+    category: "metalcraft",
     description: {
       ko: "은입사로 문양을 넣은 청동 향로",
       en: "Bronze incense burner with silver-inlaid patterns",
@@ -4492,7 +4492,7 @@ export const artifacts: Artifact[] = [
       ja: "統一新羅",
       th: "ชิลลาร่วม",
     },
-    category: "buddhist",
+    category: "buddhistArt",
     description: {
       ko: "통일신라시대의 우아한 미륵보살상",
       en: "Elegant Maitreya Bodhisattva statue from Unified Silla",
@@ -4676,7 +4676,7 @@ export const artifacts: Artifact[] = [
       ja: "高麗時代",
       th: "สมัยโครยอ",
     },
-    category: "metal",
+    category: "metalcraft",
     description: {
       ko: "쌍룡문이 새겨진 고려시대 동경",
       en: "Goryeo bronze mirror with twin dragon design",
@@ -4722,7 +4722,7 @@ export const artifacts: Artifact[] = [
       ja: "新羅",
       th: "ชิลลา",
     },
-    category: "metal",
+    category: "metalcraft",
     description: {
       ko: "신라 귀족이 착용한 금제 귀걸이",
       en: "Gold earrings worn by Silla nobility",
@@ -4814,7 +4814,7 @@ export const artifacts: Artifact[] = [
       ja: "高句麗",
       th: "โคกูรยอ",
     },
-    category: "metal",
+    category: "metalcraft",
     description: {
       ko: "고구려 전사가 착용한 철제 투구",
       en: "Iron helmet worn by Goguryeo warriors",
@@ -4860,7 +4860,7 @@ export const artifacts: Artifact[] = [
       ja: "高麗時代",
       th: "สมัยโครยอ",
     },
-    category: "metal",
+    category: "metalcraft",
     description: {
       ko: "국화문이 새겨진 은제 향합",
       en: "Silver incense container with chrysanthemum design",
@@ -4906,7 +4906,7 @@ export const artifacts: Artifact[] = [
       ja: "統一新羅",
       th: "ชิลลาร่วม",
     },
-    category: "buddhist",
+    category: "buddhistArt",
     description: {
       ko: "사자형 손잡이가 달린 병향로",
       en: "Incense burner with lion-shaped handle",

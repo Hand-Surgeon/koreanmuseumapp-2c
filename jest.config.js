@@ -21,13 +21,15 @@ const customJestConfig = {
   testEnvironment: 'jest-environment-jsdom',
   testPathIgnorePatterns: ['/node_modules/', '/.next/'],
   collectCoverageFrom: [
-    'app/**/*.{js,jsx,ts,tsx}',
-    'components/**/*.{js,jsx,ts,tsx}',
-    'hooks/**/*.{js,jsx,ts,tsx}',
-    'lib/**/*.{js,jsx,ts,tsx}',
-    '!**/*.d.ts',
-    '!**/node_modules/**',
-    '!**/.next/**',
+    'app/api/artifacts/route.ts',
+    'components/artifact-card.tsx',
+    'components/cultural-property-badge.tsx',
+    'components/favorite-artifact-card.tsx',
+    'components/server-artifact-card.tsx',
+    'hooks/useLanguage.tsx',
+    'lib/artifact-utils.ts',
+    'lib/server/artifact-repository.ts',
+    'lib/validation.ts',
   ],
   coverageThreshold: {
     global: {

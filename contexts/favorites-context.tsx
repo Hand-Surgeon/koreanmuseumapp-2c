@@ -1,7 +1,6 @@
 "use client"
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
-import { Artifact } from '@/types/artifact'
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react'
 
 interface FavoritesContextType {
   favorites: number[]
@@ -17,6 +16,18 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(undefin
 
 const FAVORITES_STORAGE_KEY = 'museum-favorites'
 
+function isValidFavoriteId(value: unknown): value is number {
+  return typeof value === 'number' && Number.isInteger(value) && value >= 1 && value <= 100
+}
+
+function parseFavorites(value: string | null): number[] {
+  if (!value) return []
+
+  const parsed: unknown = JSON.parse(value)
+  if (!Array.isArray(parsed)) return []
+  return [...new Set(parsed.filter(isValidFavoriteId))]
+}
+
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const [favorites, setFavorites] = useState<number[]>([])
   const [isLoaded, setIsLoaded] = useState(false)
@@ -25,18 +36,25 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
-        const stored = localStorage.getItem(FAVORITES_STORAGE_KEY)
-        if (stored) {
-          const parsed = JSON.parse(stored)
-          if (Array.isArray(parsed)) {
-            setFavorites(parsed)
-          }
-        }
+        setFavorites(parseFavorites(localStorage.getItem(FAVORITES_STORAGE_KEY)))
       } catch (error) {
         console.error('즐겨찾기 로드 실패:', error)
       }
       setIsLoaded(true)
     }
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== FAVORITES_STORAGE_KEY) return
+
+      try {
+        setFavorites(parseFavorites(event.newValue))
+      } catch (error) {
+        console.error('즐겨찾기 동기화 실패:', error)
+      }
+    }
+
+    window.addEventListener('storage', handleStorage)
+    return () => window.removeEventListener('storage', handleStorage)
   }, [])
 
   // 즐겨찾기 변경 시 로컬스토리지에 저장
@@ -44,14 +62,6 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     if (isLoaded && typeof window !== 'undefined') {
       try {
         localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites))
-        
-        // Service Worker에 동기화 요청
-        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-          navigator.serviceWorker.controller.postMessage({
-            type: 'SYNC_FAVORITES',
-            favorites
-          })
-        }
       } catch (error) {
         console.error('즐겨찾기 저장 실패:', error)
       }
@@ -60,6 +70,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 
   const addFavorite = useCallback((artifactId: number) => {
     setFavorites(prev => {
+      if (!isValidFavoriteId(artifactId)) return prev
       if (prev.includes(artifactId)) return prev
       return [...prev, artifactId]
     })
@@ -71,6 +82,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 
   const toggleFavorite = useCallback((artifactId: number) => {
     setFavorites(prev => {
+      if (!isValidFavoriteId(artifactId)) return prev
       if (prev.includes(artifactId)) {
         return prev.filter(id => id !== artifactId)
       }
@@ -86,7 +98,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     setFavorites([])
   }, [])
 
-  const value = {
+  const value = useMemo(() => ({
     favorites,
     addFavorite,
     removeFavorite,
@@ -94,7 +106,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     isFavorite,
     clearFavorites,
     favoritesCount: favorites.length
-  }
+  }), [addFavorite, clearFavorites, favorites, isFavorite, removeFavorite, toggleFavorite])
 
   return (
     <FavoritesContext.Provider value={value}>

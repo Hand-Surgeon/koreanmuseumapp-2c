@@ -6,129 +6,110 @@ on:
   pull_request:
     branches: [main, develop]
 
+permissions:
+  contents: read
+
 jobs:
-  lint:
-    name: Lint
+  quality:
+    name: Data and type check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Run ESLint
-        run: npm run lint
-      
-      - name: Check TypeScript
-        run: npx tsc --noEmit
+          cache: npm
+      - run: npm ci
+      - run: npm run verify:emuseum
+      - run: npm run type-check
 
   test:
-    name: Test
+    name: Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Run tests
-        run: npm run test:ci
-      
-      - name: Upload coverage reports
-        uses: codecov/codecov-action@v3
+          cache: npm
+      - run: npm ci
+      - run: npm run test:ci
+      - uses: codecov/codecov-action@v4
+        if: always()
         with:
-          file: ./coverage/lcov.info
+          files: ./coverage/lcov.info
           flags: unittests
-          name: codecov-umbrella
 
   build:
-    name: Build
+    name: Production build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Build application
-        run: npm run build
+          cache: npm
+      - run: npm ci
+      - run: npm run build
         env:
-          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
-          NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
-      
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+          NEXT_PUBLIC_APP_URL: https://museum100.kr
+      - uses: actions/upload-artifact@v4
         with:
           name: build-files
           path: .next/
           retention-days: 7
+          include-hidden-files: true
 
   lighthouse:
-    name: Lighthouse CI
-    runs-on: ubuntu-latest
+    name: Lighthouse smoke test
     needs: build
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
         with:
           name: build-files
           path: .next/
-      
-      - name: Run Lighthouse CI
-        uses: treosh/lighthouse-ci-action@v10
+      - name: Start application
+        run: npm start > /tmp/museum-next.log 2>&1 &
+      - name: Wait for application
+        run: |
+          for attempt in {1..30}; do
+            if curl --fail --silent http://localhost:3000/ko > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/museum-next.log
+          exit 1
+      - uses: treosh/lighthouse-ci-action@v12
         with:
           urls: |
-            http://localhost:3000/
             http://localhost:3000/ko
             http://localhost:3000/en
+            http://localhost:3000/ko/artifact/1
           uploadArtifacts: true
-          temporaryPublicStorage: true
 
   security:
-    name: Security Check
+    name: Dependency and filesystem scan
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+      - uses: aquasecurity/trivy-action@0.28.0
         with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-      
-      - name: Upload Trivy scan results
-        uses: github/codeql-action/upload-sarif@v2
+          scan-type: fs
+          scan-ref: .
+          format: sarif
+          output: trivy-results.sarif
+      - uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: trivy-results.sarif

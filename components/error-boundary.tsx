@@ -1,13 +1,15 @@
 "use client"
 
-import { Component, ReactNode } from 'react'
-import { Button } from '@/components/ui/button'
-import { AlertTriangle, Home, RefreshCw } from 'lucide-react'
-import Link from 'next/link'
+import { Component, type ErrorInfo, type ReactNode } from "react"
+import Link from "next/link"
+import { AlertTriangle, Home, RefreshCw } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import type { Locale } from "@/i18n.config"
 
 interface Props {
   children: ReactNode
   fallback?: ReactNode
+  locale?: Locale
 }
 
 interface State {
@@ -15,83 +17,107 @@ interface State {
   error?: Error
 }
 
+const errorCopy: Record<Locale, {
+  title: string
+  description: string
+  developerInfo: string
+  reload: string
+  home: string
+}> = {
+  ko: {
+    title: "문제가 발생했습니다",
+    description: "페이지를 불러오는 중 예상치 못한 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+    developerInfo: "개발자용 오류 정보",
+    reload: "페이지 새로고침",
+    home: "홈으로 이동",
+  },
+  en: {
+    title: "Something went wrong",
+    description: "An unexpected error occurred while loading this page. Please try again shortly.",
+    developerInfo: "Developer error details",
+    reload: "Reload page",
+    home: "Go to home",
+  },
+  zh: {
+    title: "出现问题",
+    description: "加载页面时发生意外错误。请稍后重试。",
+    developerInfo: "开发者错误详情",
+    reload: "重新加载",
+    home: "返回首页",
+  },
+  ja: {
+    title: "問題が発生しました",
+    description: "ページの読み込み中に予期しないエラーが発生しました。しばらくしてからもう一度お試しください。",
+    developerInfo: "開発者向けエラー情報",
+    reload: "ページを再読み込み",
+    home: "ホームへ移動",
+  },
+  th: {
+    title: "เกิดข้อผิดพลาด",
+    description: "เกิดข้อผิดพลาดที่ไม่คาดคิดระหว่างโหลดหน้า โปรดลองใหม่อีกครั้งในอีกสักครู่",
+    developerInfo: "รายละเอียดข้อผิดพลาดสำหรับนักพัฒนา",
+    reload: "โหลดหน้าใหม่",
+    home: "ไปยังหน้าหลัก",
+  },
+}
+
 export class ErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = { hasError: false }
-  }
+  state: State = { hasError: false }
 
   static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error }
   }
 
-  componentDidCatch(error: Error, errorInfo: any) {
-    // 에러 로깅 서비스에 에러 전송
-    console.error('에러 바운더리에서 포착된 에러:', error, errorInfo)
-    
-    // 프로덕션 환경에서는 Sentry 등으로 전송
-    if (process.env.NODE_ENV === 'production') {
-      // Sentry.captureException(error, { contexts: { react: errorInfo } })
-    }
-  }
-
-  handleReset = () => {
-    this.setState({ hasError: false, error: undefined })
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("Error boundary caught an error:", error, errorInfo)
   }
 
   render() {
-    if (this.state.hasError) {
-      return this.props.fallback || (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
-          <div className="max-w-md w-full text-center space-y-6">
-            <div className="flex justify-center">
-              <div className="bg-red-100 p-4 rounded-full">
-                <AlertTriangle className="h-12 w-12 text-red-600" />
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <h1 className="text-2xl font-bold text-gray-900">
-                문제가 발생했습니다
-              </h1>
-              <p className="text-gray-600">
-                페이지를 불러오는 중 예상치 못한 오류가 발생했습니다.
-                잠시 후 다시 시도해 주세요.
-              </p>
-            </div>
+    if (!this.state.hasError) return this.props.children
+    if (this.props.fallback) return this.props.fallback
 
-            {process.env.NODE_ENV === 'development' && this.state.error && (
-              <details className="text-left bg-gray-100 p-4 rounded-lg">
-                <summary className="cursor-pointer text-sm font-medium text-gray-700">
-                  개발자용 오류 정보
-                </summary>
-                <pre className="mt-2 text-xs text-gray-600 overflow-auto">
-                  {this.state.error.stack}
-                </pre>
-              </details>
-            )}
+    const locale = this.props.locale ?? "ko"
+    const copy = errorCopy[locale]
 
-            <div className="flex gap-3 justify-center">
-              <Button
-                onClick={() => window.location.reload()}
-                variant="default"
-                className="gap-2"
-              >
-                <RefreshCw className="h-4 w-4" />
-                페이지 새로고침
-              </Button>
-              <Link href="/">
-                <Button variant="outline" className="gap-2">
-                  <Home className="h-4 w-4" />
-                  홈으로 이동
-                </Button>
-              </Link>
+    return (
+      <main id="main-content" tabIndex={-1} className="flex min-h-screen items-center justify-center bg-gray-50 p-4 outline-none">
+        <div className="w-full max-w-md space-y-6 text-center">
+          <div className="flex justify-center">
+            <div className="rounded-full bg-red-100 p-4">
+              <AlertTriangle aria-hidden="true" className="h-12 w-12 text-red-700" />
             </div>
           </div>
-        </div>
-      )
-    }
 
-    return this.props.children
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-gray-900">{copy.title}</h1>
+            <p className="text-gray-600">{copy.description}</p>
+          </div>
+
+          {process.env.NODE_ENV === "development" && this.state.error && (
+            <details className="rounded-lg bg-gray-100 p-4 text-start">
+              <summary className="cursor-pointer text-sm font-medium text-gray-700">
+                {copy.developerInfo}
+              </summary>
+              <pre className="mt-2 overflow-auto text-xs text-gray-600">
+                {this.state.error.stack}
+              </pre>
+            </details>
+          )}
+
+          <div className="flex flex-wrap justify-center gap-3">
+            <Button onClick={() => window.location.reload()} className="gap-2">
+              <RefreshCw aria-hidden="true" className="h-4 w-4" />
+              {copy.reload}
+            </Button>
+            <Button asChild variant="outline" className="gap-2">
+              <Link href={`/${locale}`}>
+                <Home aria-hidden="true" className="h-4 w-4" />
+                {copy.home}
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </main>
+    )
   }
 }
