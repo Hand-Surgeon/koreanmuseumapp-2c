@@ -41,6 +41,8 @@ npm run pre-deploy
 3. `npm test -- --runInBand`
 4. `npm run build`
 
+현재 lockfile은 Vercel의 취약 Next.js 배포 차단을 피하는 보안 패치 조합인 `next@15.5.20`, `react@19.1.8`, `react-dom@19.1.8`, `postcss@8.5.16`을 사용합니다. 배포 전에 `npm audit`이 0건인지도 확인하세요.
+
 빌드 후 산출물을 확인하려면:
 
 ```bash
@@ -86,7 +88,6 @@ DNS 레코드 값은 고정하지 말고 호스팅 대시보드가 현재 제시
 
 다음 항목은 운영 배포 전 별도로 해결해야 합니다.
 
-- lockfile의 Next.js/React를 공식 보안 패치 버전으로 업그레이드하고 회귀 검증
 - ESLint flat config·패키지 구성 후 lint를 CI에 복구
 - 운영 전 eMuseum key를 교체하고 100개 공식 ID를 검토하며, key는 로컬 동기화 작업에만 사용
 - 모든 이미지의 출처, 저작권, 제3자 권리, 재배포 허용 범위 확인

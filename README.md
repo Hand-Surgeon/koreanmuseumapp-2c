@@ -43,6 +43,8 @@ npm run build
 `npm run pre-deploy`는 위 세 검증을 순서대로 실행합니다.
 이 과정에는 eMuseum 스냅샷·이미지 해시·권리 manifest 검증도 포함됩니다.
 
+보안 기준 버전은 `next@15.5.20`, `react@19.1.8`, `react-dom@19.1.8`, `postcss@8.5.16`으로 고정되어 있습니다. lockfile을 함께 갱신하고 `npm audit`과 전체 빌드를 통과한 조합입니다.
+
 ## 환경 변수
 
 `.env.example`에서 지원하는 항목을 확인할 수 있습니다.
@@ -75,7 +77,6 @@ eMuseum → 후보 검색 → 공식 ID 수동 확인 → 권리 검토 → 이�
 
 ## 배포 전 필수 조치
 
-- 현재 lockfile의 Next.js/React 보안 패치 버전으로 의존성 업그레이드
 - ESLint flat config와 해당 패키지를 추가해 정적 분석 게이트 복구
 - 현재 인증키를 운영 사용 전에 교체하고 공식 ID·출처·이미지 권리를 100건 모두 검토
 - `npm run verify:emuseum` 통과 후에만 `MUSEUM_DATA_VERIFIED=true`로 색인 게이트 해제
